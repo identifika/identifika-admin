@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import AuthProvider from '@/components/AuthProvider'
 import Navbar from '@/components/Navbar'
+import { usePathname } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -17,8 +18,8 @@ function MainLayout({ children }) {
   return (
     <html suppressHydrationWarning>
       <head>
-        <title>Next.js starter</title>
-        <meta name='description' content='A Starter with Next.js' />
+        <title>Identifika.</title>
+        <meta name='description' content='Trusted Face API' />
       </head>
 
       <body className={GeistSans.className}>
@@ -28,7 +29,7 @@ function MainLayout({ children }) {
               <AtomicState>
                 <FetchConfig baseUrl='/api'>
                   <Navbar />
-                  <div className='max-w-7xl mx-auto p-4'>{children}</div>
+                  <div className=''>{children}</div>
                 </FetchConfig>
               </AtomicState>
             </AuthProvider>

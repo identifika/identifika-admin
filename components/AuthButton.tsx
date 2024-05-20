@@ -14,12 +14,23 @@ import Link from 'next/link'
 
 export default function AuthButton() {
   const { data } = useSession()
+  // function to get avatar abbreviation
+  function getAbbreviation(name: string) {
+    var abbr = name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+    if (abbr.length > 2) {
+      return abbr.slice(0, 2)
+    }
+    return abbr
+  }
   return data?.user ? (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
           <AvatarImage src={data?.user?.image!} alt='@shadcn' />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>{getAbbreviation(data?.user?.name!)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -31,7 +42,7 @@ export default function AuthButton() {
       </DropdownMenuContent>
     </DropdownMenu>
   ) : (
-    <Link href='/api/auth/signin'>
+    <Link href='/signin'>
       <Button>Sign in</Button>
     </Link>
   )

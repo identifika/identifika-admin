@@ -8,8 +8,82 @@ generator client {
 }
 
 model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  date      DateTime @default(now())
-  content   String
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  title   String
+  date    DateTime @default(now())
+  content String
+}
+
+model users {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  email      String       @unique
+  name       String
+  password   String
+  active     Boolean      @default(false)
+  role       String       @default("user")
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  clients    clients[]
+  queue_task queue_task[]
+}
+
+model faces {
+  id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+  user_name           String
+  knn_indexing        Int
+  face_representation FaceRepresentation?
+  client_id           String              @map("client_id") @db.ObjectId
+  client              clients             @relation(fields: [client_id], references: [id])
+
+  @@map("faces")
+}
+
+type FaceRepresentation {
+  embedding   Float[]
+  facial_area FacialArea?
+}
+
+type FacialArea {
+  x Int
+  y Int
+  w Int
+  h Int
+}
+
+model clients {
+  id               String              @id @default(auto()) @map("_id") @db.ObjectId
+  user_id          String              @map("user_id") @db.ObjectId
+  client_name      String
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  external_token   String
+  user             users               @relation(fields: [user_id], references: [id])
+  faces            faces[]
+  recognition_type recognition_types[]
+  queue_task       queue_task[]
+
+  @@map("clients")
+}
+
+model recognition_types {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  face_detector    String
+  face_model       String
+  recognition_type String
+  clients          clients? @relation(fields: [clientsId], references: [id])
+  clientsId        String?  @db.ObjectId
+}
+
+model queue_task {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  task_id        String
+  task_name      String
+  status         String
+  client_id      String   @map("client_id") @db.ObjectId
+  client         clients  @relation(fields: [client_id], references: [id])
+  user_id        String   @map("user_id") @db.ObjectId
+  user           users    @relation(fields: [user_id], references: [id])
+  message        String
+  csv_error_file String?
+  created_at      DateTime @default(now())
 }
