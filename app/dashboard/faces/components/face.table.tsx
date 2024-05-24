@@ -1,14 +1,18 @@
 'use client';
 
 import clsx from "clsx";
-import { ArrowLeft, ArrowRight, ImportIcon, LucideImport, MoreVertical, MoreVerticalIcon, Search, SidebarCloseIcon } from "lucide-react";
+import { ArrowLeft, ArrowRight, } from "lucide-react";
 import Link from "next/link";
 import { BiSolidFileImport } from "react-icons/bi";
 import AddFaceDialog from "./add.face.dialog";
 import SearchComponent from "./search.component";
 import { IoAddCircle } from "react-icons/io5";
 import ImportFaceDialog from "./import.face.dialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { TbTrash } from "react-icons/tb";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import DeleteFaceDialog from "./delete.face.dialog";
+
 
 async function fetchFaces(
     page: number,
@@ -35,6 +39,24 @@ async function fetchFaces(
     return data
 }
 
+async function deleteFace(faceId: string) {
+    try {
+        const res = await fetch(`http://localhost:3000/api/faces/${faceId}`, {
+            method: 'DELETE',
+        })
+        if (!res.ok) {
+            return {
+                status: 'error',
+                message: 'Failed to delete face'
+            };
+        }
+        return res.json();
+    } catch (error) {
+        console.error(error)
+        return null
+    }
+}
+
 type FaceTableProps = {
     page: number
     limit: number
@@ -42,17 +64,29 @@ type FaceTableProps = {
     clientId?: string
 }
 
-export default async function FaceTable(props: FaceTableProps) {
+enum Status {
+    IDLE,
+    LOADING,
+    SUCCESS,
+    ERROR,
+}
 
-    // const data = await fetchFaces(props.page, props.limit, props.search, props.clientId)
+export default function FaceTable(props: FaceTableProps) {
 
     const [data, setData] = useState<any>({ data: [], meta: { page: 1, limit: 10, totalPages: 1, total: 0 } })
+
 
     useEffect(() => {
         fetchFaces(props.page, props.limit, props.search, props.clientId).then((data) => {
             setData(data)
         })
     }, [props.page, props.limit, props.search, props.clientId])
+
+    const refetchData = () => {
+        fetchFaces(props.page, props.limit, props.search, props.clientId).then((data) => {
+            setData(data)
+        })
+    }
 
     return (
         <section className="container px-4 mx-auto">
@@ -70,7 +104,7 @@ export default async function FaceTable(props: FaceTableProps) {
                 <div className="flex items-center mt-4 gap-x-3">
                     <ImportFaceDialog />
 
-                    <AddFaceDialog />
+                    <AddFaceDialog afterSubmit={refetchData} />
                 </div>
             </div>
             <SearchComponent page={props.page} limit={props.limit} clientId={props.clientId} />
@@ -99,7 +133,7 @@ export default async function FaceTable(props: FaceTableProps) {
                                             scope="col"
                                             className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
                                         >
-                                            KNN Indexing
+                                            Client
                                         </th>
                                         <th scope="col" className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             Actions
@@ -109,33 +143,31 @@ export default async function FaceTable(props: FaceTableProps) {
                                 <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
 
                                     {
-                                        data.data.map((user: any) => (
-                                            <tr key={user.id}>
+                                        data.data.map((face: any) => (
+                                            <tr key={face.id}>
                                                 <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
                                                     <div>
                                                         <h2 className="font-medium text-gray-800 dark:text-white ">
-                                                            {user.id}
+                                                            {face.id}
                                                         </h2>
                                                     </div>
                                                 </td>
                                                 <td className="px-12 py-4 text-sm font-medium whitespace-nowrap">
                                                     <div>
                                                         <h2 className="font-medium text-gray-800 dark:text-white ">
-                                                            {user.user_name}
+                                                            {face.user_name}
                                                         </h2>
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div>
                                                         <h2 className="font-medium text-gray-800 dark:text-white ">
-                                                            {user.knn_indexing}
+                                                            {face.client.client_name}
                                                         </h2>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-4 text-sm whitespace-nowrap">
-                                                    <button className="px-1 py-1 text-gray-500 transition-colors duration-200 rounded-lg dark:text-gray-300 hover:bg-gray-100">
-                                                        <MoreVerticalIcon className="w-5 h-5" />
-                                                    </button>
+                                                <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
+                                                    <DeleteFaceDialog faceId={face.id} clientId={face.client_id} afterDelete={refetchData} />
                                                 </td>
                                             </tr>
                                         ))
@@ -175,7 +207,7 @@ export default async function FaceTable(props: FaceTableProps) {
                     </Link>
                     <Link
                         href={
-                            props.page === data.meta.totalPages
+                            props.page === data.meta.totalPages || data.meta.totalPages === 0 
                                 ? "#"
                                 :
                                 `/dashboard/faces?page=${props.page + 1}&limit=${props.limit}&search=${props.search}&client_id=${props.clientId}`

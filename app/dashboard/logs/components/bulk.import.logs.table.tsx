@@ -40,6 +40,20 @@ async function fetchLogs(
     }
 }
 
+
+async function fetchBulkRegisterStatus(taskId: string) {
+    try {
+        const res = await fetch(`http://localhost:3000/api/queue_task/${taskId}/status_bulk`)
+        const data = await res.json()
+        return data
+    }
+    catch (error) {
+        console.error(error)
+        return null
+    }
+
+}
+
 type ReportTableProps = {
     page: number
     limit: number
@@ -47,7 +61,7 @@ type ReportTableProps = {
 
 export default function BulkImportLogsTable(props: ReportTableProps) {
 
-    const [data, setData] = useState({ data: [], meta: { totalPages: 0, total_data: 0, page: 0 } });
+    const [data, setData] = useState({ data: [], meta: { totalPages: 1, total_data: 0, page: 1 } });
 
     useEffect(() => {
         fetchLogs(props.page, props.limit)
@@ -67,6 +81,7 @@ export default function BulkImportLogsTable(props: ReportTableProps) {
                 });
             });
     }, [props.page, props.limit]);
+
 
 
 
@@ -119,19 +134,27 @@ export default function BulkImportLogsTable(props: ReportTableProps) {
                                         data.data.map((logs: any, index: number) => (
                                             <tr key={index}>
                                                 <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
-                                                    <div>
-                                                        <h2 className="font-medium text-gray-800 dark:text-white ">
-                                                            {logs.client.client_name}
-                                                        </h2>
-                                                    </div>
+
+                                                    <Link href={`/dashboard/logs/${logs.task_id}`}>
+                                                        <div>
+                                                            <h2 className="font-medium text-gray-800 dark:text-white ">
+                                                                {logs.client.client_name}
+                                                            </h2>
+                                                        </div>
+                                                    </Link>
                                                 </td>
+
                                                 <td className="px-12 py-4 text-sm font-medium whitespace-nowrap">
-                                                    <div>
-                                                        <h2 className="font-medium text-gray-800 dark:text-white ">
-                                                            {logs.task_id}
-                                                        </h2>
-                                                    </div>
+                                                    <Link href={`/dashboard/logs/${logs.task_id}`}>
+
+                                                        <div>
+                                                            <h2 className="font-medium text-gray-800 dark:text-white ">
+                                                                {logs.task_id}
+                                                            </h2>
+                                                        </div>
+                                                    </Link>
                                                 </td>
+
                                                 <td className="px-12 py-4 text-sm font-medium whitespace-nowrap">
                                                     <div>
                                                         <h2 className="font-medium text-gray-800 dark:text-white ">
@@ -142,21 +165,16 @@ export default function BulkImportLogsTable(props: ReportTableProps) {
                                                 <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div>
                                                         <h2 className="font-medium text-gray-800 dark:text-white ">
-                                                            {/* {logs.message} */}
-                                                            {/* if logs.message > 10 */}
                                                             {logs.message.length > 15 ? `${logs.message.substring(0, 15)}...` : logs.message}
                                                         </h2>
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-4 text-sm whitespace-nowrap">
-                                                    {/* if logs csv are not null or empty add link */}
-                                                    <a href={logs.csv_error_file} className="text-blue-500 hover:underline">
-                                                        <div>
-                                                            <h2 className="font-medium text-gray-800 dark:text-white ">
-                                                                {logs.csv_error_file.length > 15 ? `${logs.csv_error_file.substring(0, 15)}...` : logs.csv_error_file}
-                                                            </h2>
-                                                        </div>
-                                                    </a>
+                                                    <div>
+                                                        <h2 className="font-medium text-gray-800 dark:text-white ">
+                                                            {logs.csv_error_file.length > 15 ? `${logs.csv_error_file.substring(0, 15)}...` : logs.csv_error_file}
+                                                        </h2>
+                                                    </div>
                                                 </td>
 
                                             </tr>
@@ -181,7 +199,7 @@ export default function BulkImportLogsTable(props: ReportTableProps) {
                         href={
                             props.page === 1 || props.page === 0
                                 ? "#"
-                                : `/dashboard/reports?page=${props.page - 1}&limit=${props.limit}`
+                                : `/dashboard/logs?page=${props.page - 1}&limit=${props.limit}`
                         }
                         className={
                             clsx(
@@ -196,7 +214,11 @@ export default function BulkImportLogsTable(props: ReportTableProps) {
                         <span>previous</span>
                     </Link>
                     <Link
-                        href={`/dashboard/reports?page=${props.page + 1}&limit=${props.limit}`}
+                        href={
+                            props.page === data.meta.totalPages || props.page === 0 || props.page > data.meta.totalPages
+                                ? "#"
+                                : `/dashboard/logs?page=${props.page + 1}&limit=${props.limit}`
+                        }
                         className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
                     >
                         <ArrowRight className="w-5 h-5 rtl:-scale-x-100" />

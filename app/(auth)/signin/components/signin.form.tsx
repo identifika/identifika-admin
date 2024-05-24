@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { signIn } from "next-auth/react"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 
 type LoginPageProps = {
@@ -14,32 +14,46 @@ type LoginPageProps = {
     callbackUrl?: string
 }
 
+enum Status {
+    IDLE,
+    LOADING,
+    SUCCESS,
+    ERROR,
+}
+
 export default function LoginPage(props: LoginPageProps) {
     const email = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
+    const [status, setStatus] = useState<Status>(Status.IDLE)
 
     async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        const body = {
-            email: email.current?.value,
-            password: password.current?.value,
+        try {
+            e.preventDefault()
+            const body = {
+                email: email.current?.value,
+                password: password.current?.value,
+            }
+
+            setStatus(Status.LOADING)
+            await signIn("credentials", {
+                redirect: true,
+                email: body.email,
+                password: body.password,
+                callbackUrl: props.callbackUrl ?? "/dashboard"
+            })
+            setStatus(Status.IDLE)
+        } catch (error) {
+            console.error(error)
+            setStatus(Status.ERROR)
         }
-        await signIn("credentials", {
-            redirect: true,
-            email: body.email,
-            password: body.password,
-            callbackUrl: props.callbackUrl ?? "/dashboard"
-        })
     }
 
     function errorTranslation(error: string) {
         switch (error) {
             case "CredentialsSignin":
                 return "Invalid email or password"
-                break;
             default:
                 return "An error occurred"
-                break;
         }
     }
 
@@ -68,8 +82,8 @@ export default function LoginPage(props: LoginPageProps) {
                                 {errorTranslation(props.error)}
                             </p>
                             )}
-                            <Button className="w-full" type="submit" >
-                                Sign In
+                            <Button type="submit" className="w-full" disabled={status === Status.LOADING}>
+                                {status === Status.LOADING ? "Loading..." : "Login"}
                             </Button>
                             <p className="text-sm mt-6 text-center">
                                 Don't have an account?{" "}

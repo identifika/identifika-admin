@@ -2,19 +2,6 @@ import { prisma } from 'server'
 import { NextResponse } from 'next/server'
 
 
-// exclude passwords from the response
-const excludePassword = {
-  select: {
-    id: true,
-    name: true,
-    email: true,
-    active: true,
-    role: true,
-    createdAt: true,
-    updatedAt: true,
-  }
-}
-
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
@@ -23,13 +10,24 @@ export async function GET(request: Request) {
     const limit = Number(searchParams.get('limit')) || 10
 
     const users = await prisma.users.findMany({
-      ...excludePassword,
       where: {
         name: {
           // ignore case
           contains: search,
           mode: 'insensitive',
         },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        active: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: {
+          select: { clients: true }
+        }
       },
       skip: (page - 1) * limit,
       take: limit,

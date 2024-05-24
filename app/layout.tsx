@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/ThemeProvider'
 import AuthProvider from '@/components/AuthProvider'
 import Navbar from '@/components/Navbar'
 import { usePathname } from 'next/navigation'
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -30,6 +31,7 @@ function MainLayout({ children }) {
                 <FetchConfig baseUrl='/api'>
                   <Navbar />
                   <div className=''>{children}</div>
+                  <Toaster />
                 </FetchConfig>
               </AtomicState>
             </AuthProvider>

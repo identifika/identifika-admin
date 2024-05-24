@@ -3,13 +3,13 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { IoCloseCircle } from "react-icons/io5";
 
-type SearchComponentProps = {
+type ClientSearchComponentProps = {
     page: number
     limit: number
-    clientId?: string
+    search: string
 }
 
-export default function SearchComponent(props: SearchComponentProps) {
+export default function ClientSearchComponent(props: ClientSearchComponentProps) {
     const searchText = useRef<HTMLInputElement>(null)
     const router = useRouter()
 
@@ -17,7 +17,8 @@ export default function SearchComponent(props: SearchComponentProps) {
     function onSearchFunction(e: any) {
         e.preventDefault()
         const search = searchText.current?.value;
-        router.push(`/dashboard/faces?page=${props.page}&limit=${props.limit}&search=${search}&client_id=${props.clientId}`)
+        router.push(`/dashboard/clients?page=${props.page}&limit=${props.limit}&search=${search}`)
+
     }
 
     return (
@@ -45,7 +46,7 @@ export default function SearchComponent(props: SearchComponentProps) {
                 <button
                     onClick={() => {
                         searchText.current!.value = '';
-                        router.push(`/dashboard/faces?page=${props.page}&limit=${props.limit}&client_id=${props.clientId}`)
+                        router.push(`/dashboard/clients?page=${props.page}&limit=${props.limit}`)
                     }}
                     className="absolute right-0 top-0 bottom-0 px-3 py-1.5 text-gray-400 dark:text-gray-500"
                 >

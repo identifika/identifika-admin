@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useTransition } from 'react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useRouter } from 'next/navigation'
+
 
 type AddClientProps = {
-    clientId?: string
+    clientId?: string,
 }
 
 enum Status {
@@ -33,7 +35,6 @@ export default function AddClientForm(props: AddClientProps) {
     const [status, setStatus] = useState<Status>(Status.IDLE)
     const [clientName, setClientName] = useState<string>('')
 
-
     useEffect(() => {
         fetchRecognitionType().then((data) => {
             setRecognitionTypes(data.data)
@@ -60,7 +61,6 @@ export default function AddClientForm(props: AddClientProps) {
         setStatus(Status.LOADING)
 
         try {
-
             let formData = new FormData();
             formData.append('recognition_type', selectedRecognitionType.id);
             formData.append('client_name', clientName);

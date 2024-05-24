@@ -27,11 +27,6 @@ export async function GET(request: NextRequest) {
         if (role === 'user') {
             const clients = await prisma.clients.findMany({
                 where: {
-                    client_name: {
-                        // ignore case
-                        contains: search,
-                        mode: 'insensitive',
-                    },
                     user_id: {
                         equals: userId
                     }
@@ -56,6 +51,8 @@ export async function GET(request: NextRequest) {
                         user_name: true,
                         id: true,
                         knn_indexing: true,
+                        client_id: true,
+                        client: true,
                     },
                     skip: (page - 1) * limit,
                     take: limit,
@@ -99,6 +96,8 @@ export async function GET(request: NextRequest) {
                         user_name: true,
                         id: true,
                         knn_indexing: true,
+                        client_id: true,
+                        client: true,
                     },
                     skip: (page - 1) * limit,
                     take: limit,
@@ -146,6 +145,8 @@ export async function GET(request: NextRequest) {
                         user_name: true,
                         id: true,
                         knn_indexing: true,
+                        client_id: true,
+                        client: true,
                     },
                     skip: (page - 1) * limit,
                     take: limit,
@@ -186,6 +187,8 @@ export async function GET(request: NextRequest) {
                         user_name: true,
                         id: true,
                         knn_indexing: true,
+                        client_id: true,
+                        client: true,
                     },
                     skip: (page - 1) * limit,
                     take: limit,

@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
         const search = searchParams.get('search') || ''
         const page = Number(searchParams.get('page')) || 1
         const limit = Number(searchParams.get('limit')) || 10
+        const clientId = searchParams.get('userId') || ''
 
         var token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
 
@@ -81,57 +82,116 @@ export async function GET(request: NextRequest) {
                 'meta': meta,
             }, { status: 200 })
         } else {
+            if (clientId) {
 
-            const clients = await prisma.$transaction([
-                prisma.clients.findMany({
-                    where: {
-                        client_name: {
-                            // ignore case
-                            contains: search,
-                            mode: 'insensitive',
-                        },
-                    },
-                    select: {
-                        client_name: true,
-                        id: true,
-                        user_id: true,
-                        external_token: true,
-                        user: {
-                            select: {
-                                name: true,
+                const clients = await prisma.$transaction([
+                    prisma.clients.findMany({
+                        where: {
+                            client_name: {
+                                // ignore case
+                                contains: search,
+                                mode: 'insensitive',
+                            },
+                            user_id: {
+                                equals: clientId
                             }
                         },
-                        _count: {
-                            select: {
-                                faces: true
+                        select: {
+                            client_name: true,
+                            id: true,
+                            user_id: true,
+                            external_token: true,
+                            user: {
+                                select: {
+                                    name: true,
+                                }
+                            },
+                            _count: {
+                                select: {
+                                    faces: true
+                                }
+                            }
+                        },
+                        skip: (page - 1) * limit,
+                        take: limit,
+                    }),
+                    prisma.clients.count({
+                        where: {
+                            client_name: {
+                                contains: search,
+                                mode: 'insensitive',
+                            },
+                            user_id: {
+                                equals: clientId
                             }
                         }
-                    },
-                    skip: (page - 1) * limit,
-                    take: limit,
-                }),
-                prisma.clients.count({
-                    where: {
-                        client_name: {
-                            contains: search,
-                            mode: 'insensitive',
-                        }
-                    }
-                })
-            ])
+                    })
+                ])
+                const meta = {
+                    page,
+                    limit,
+                    totalPages: Math.ceil(clients[1] / limit),
+                    total: clients[1],
+                }
 
-            const meta = {
-                page,
-                limit,
-                totalPages: Math.ceil(clients[1] / limit),
-                total: clients[1],
+                return NextResponse.json({
+                    'status': 'success',
+                    'data': clients[0],
+                    'meta': meta,
+                }, { status: 200 })
+            } else {
+                const clients = await prisma.$transaction([
+                    prisma.clients.findMany({
+                        where: {
+                            client_name: {
+                                // ignore case
+                                contains: search,
+                                mode: 'insensitive',
+                            },
+                        },
+                        select: {
+                            client_name: true,
+                            id: true,
+                            user_id: true,
+                            external_token: true,
+                            user: {
+                                select: {
+                                    name: true,
+                                }
+                            },
+                            _count: {
+                                select: {
+                                    faces: true
+                                }
+                            }
+                        },
+                        skip: (page - 1) * limit,
+                        take: limit,
+                    }),
+                    prisma.clients.count({
+                        where: {
+                            client_name: {
+                                contains: search,
+                                mode: 'insensitive',
+                            },
+                        }
+                    })
+                ])
+                const meta = {
+                    page,
+                    limit,
+                    totalPages: Math.ceil(clients[1] / limit),
+                    total: clients[1],
+                }
+
+                return NextResponse.json({
+                    'status': 'success',
+                    'data': clients[0],
+                    'meta': meta,
+                }, { status: 200 })
             }
 
-            return NextResponse.json({
-                'status': 'success',
-                'data': clients[0],
-                'meta': meta,
-            }, { status: 200 })
+
         }
 
 

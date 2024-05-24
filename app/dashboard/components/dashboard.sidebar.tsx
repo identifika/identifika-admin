@@ -1,7 +1,7 @@
 'use client';
 import Link from "next/link";
 import NavLinks from "./dashboard.navlinks";
-import { Building2Icon, CheckIcon, PowerIcon, Settings2Icon } from "lucide-react";
+import { Building2Icon, CheckIcon, PowerIcon, Settings2Icon, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { RxDashboard } from "react-icons/rx";
 import { PiUsers } from "react-icons/pi";
@@ -20,11 +20,42 @@ import { usePathname } from "next/navigation";
 
 import clsx from "clsx";
 import { BiListOl } from "react-icons/bi";
+import { useState, useEffect } from "react";
+
+async function getUsers() {
+    try {
+        const res = await fetch('http://localhost:3000/api/profile')
+        if (res.status === 200) {
+            const data = await res.json()
+            return data
+        } else {
+            return null
+        }
+    }
+    catch (error) {
+        console.error(error)
+        return null
+    }
+}
+
+type User = {
+    name: string;
+    email: string;
+    role: string;
+    active: boolean;
+}
+
 
 
 export default function DashboardSidebar() {
-    const { data } = useSession()
-    var pathname = usePathname()
+    const pathname = usePathname();
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        getUsers().then(data => {
+            setUser(data.data)
+        })
+    }, [])
 
     return (
         <aside className="flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto bg-white border-r rtl:border-r-0 rtl:border-l dark:border-slate-800 dark:bg-slate-800">
@@ -39,12 +70,27 @@ export default function DashboardSidebar() {
                     src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
                     alt="avatar"
                 /> */}
-                <h4 className="mx-2 mt-2 font-medium text-gray-800 dark:text-gray-200">
-                    {data?.user?.name}
-                </h4>
-                <p className="mx-2 mt-1 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {data?.user?.email}
-                </p>
+                <Link href="/dashboard/profile" className="flex flex-col items-center">
+                    <h4 className="mx-2 mt-2 font-medium text-gray-800 dark:text-gray-200">
+                        {user?.name}
+                    </h4>
+                    <p className="mx-2 mt-1 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        {user?.email}
+                    </p>
+                    {
+                        user?.active ? (
+                            <div className="flex items-center justify-center px-2 py-1 mt-1 text-xs font-medium text-green-600 bg-green-100 rounded-full mt-3">
+                                <CheckIcon className="w-3 h-3" />
+                                <span className="mx-1">Email Confirmed</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center justify-center px-2 py-1 mt-1 text-xs font-medium text-red-600 bg-red-100 rounded-full mt-3">
+                                <CheckIcon className="w-3 h-3" />
+                                <span className="mx-1">Email Not Confirmed</span>
+                            </div>
+                        )
+                    }
+                </Link>
             </div>
             <div className="flex flex-col justify-between flex-1 mt-6">
                 <nav>
@@ -62,7 +108,7 @@ export default function DashboardSidebar() {
                         <span className="mx-4 font-medium">Dashboard</span>
                     </Link>
                     {
-                        data?.user?.role === "admin" && (
+                        user?.role === "admin" && (
                             <Link
                                 className={
                                     clsx(
@@ -105,13 +151,13 @@ export default function DashboardSidebar() {
                     <hr className="my-6 dark:border-gray-700" />
                     <Link
                         className="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-                        href="/dashboard/bulk_import_logs"
+                        href="/dashboard/logs"
                     >
                         <BiListOl className="w-5 h-5" />
                         <span className="mx-4 font-medium">Bulk Import Logs</span>
                     </Link>
                     {
-                        data?.user?.role === "admin" && (
+                        user?.role === "admin" && (
                             <Link
                                 className="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
                                 href="/dashboard/reports"

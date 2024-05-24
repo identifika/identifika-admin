@@ -49,7 +49,7 @@ type ReportTableProps = {
 
 export default function ReportTable(props: ReportTableProps) {
 
-    const [data, setData] = useState({ data: [], meta: { total_page: 0 } });
+    const [data, setData] = useState({ data: [], meta: { total_page: 1 } });
 
     useEffect(() => {
         fetchReport(props.page, props.limit, props.search)
@@ -191,7 +191,11 @@ export default function ReportTable(props: ReportTableProps) {
                         <span>previous</span>
                     </Link>
                     <Link
-                        href={`/dashboard/reports?page=${props.page + 1}&limit=${props.limit}&search=${props.search}`}
+                        href={
+                            props.page === data.meta.total_page || props.page === 0 || props.page > data.meta.total_page
+                                ? "#"
+                                : `/dashboard/reports?page=${props.page + 1}&limit=${props.limit}&search=${props.search}`
+                        }
                         className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
                     >
                         <ArrowRight className="w-5 h-5 rtl:-scale-x-100" />

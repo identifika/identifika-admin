@@ -28,7 +28,7 @@ model users {
 }
 
 model faces {
-  id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+  id                  String              @id @map("_id")
   user_name           String
   knn_indexing        Int
   face_representation FaceRepresentation?
@@ -51,27 +51,34 @@ type FacialArea {
 }
 
 model clients {
-  id               String              @id @default(auto()) @map("_id") @db.ObjectId
-  user_id          String              @map("user_id") @db.ObjectId
-  client_name      String
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
-  external_token   String
-  user             users               @relation(fields: [user_id], references: [id])
-  faces            faces[]
-  recognition_type recognition_types[]
-  queue_task       queue_task[]
+  id                  String             @id @default(auto()) @map("_id") @db.ObjectId
+  user_id             String             @map("user_id") @db.ObjectId
+  client_name         String
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  external_token      String
+  user                users              @relation(fields: [user_id], references: [id])
+  faces               faces[]
+  recognition_type    RecognitionType
+  queue_task          queue_task[]
+  recognition_types   recognition_types? @relation(fields: [recognition_typesId], references: [id])
+  recognition_typesId String?            @db.ObjectId
 
   @@map("clients")
 }
 
-model recognition_types {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+type RecognitionType {
   face_detector    String
   face_model       String
   recognition_type String
-  clients          clients? @relation(fields: [clientsId], references: [id])
-  clientsId        String?  @db.ObjectId
+}
+
+model recognition_types {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  face_detector    String
+  face_model       String
+  recognition_type String
+  clients          clients[]
 }
 
 model queue_task {
@@ -85,5 +92,5 @@ model queue_task {
   user           users    @relation(fields: [user_id], references: [id])
   message        String
   csv_error_file String?
-  created_at      DateTime @default(now())
+  created_at     DateTime @default(now())
 }

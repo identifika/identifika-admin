@@ -1,16 +1,16 @@
 'use client';
 
 import clsx from "clsx";
-import { CheckIcon, XCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import DialogUpdateProfile from "./components/dialog.update.profile";
-import DialogReconfirmEmail from "./components/dialog.reconfirm.email";
+import DialogActive from "./components/dialog.active";
+import DialogChangeRole from "./components/dialog.change.role";
+import DialogUpdateUser from "./components/dialog.update.user";
 
-async function getUsers() {
+async function getUsers(userId: string) {
     try {
-        const res = await fetch('http://localhost:3000/api/profile')
+        const res = await fetch('http://localhost:3000/api/users/' + userId)
         if (res.status === 200) {
             const data = await res.json()
             return data
@@ -49,13 +49,13 @@ export default function Page() {
     const [status, setStatus] = useState<Status>(Status.IDLE)
 
     useEffect(() => {
-        getUsers().then(data => {
+        getUsers(userId.toString()).then(data => {
             setUserData(data.data)
         })
     }, [])
 
     const refetchData = async () => {
-        const data = await getUsers()
+        const data = await getUsers(userId.toString())
         setUserData(data.data)
     }
 
@@ -71,36 +71,44 @@ export default function Page() {
                         <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-2">
-                                    <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">User Information</span>
+                                    <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">{userData.name}</span>
 
                                 </div>
                                 <div className="flex items-center space-x-2">
-
+                                    <DialogActive isActive={userData.active} userId={userData.id} onStatusChange={refetchData} />
+                                    <DialogChangeRole role={userData.role} userId={userData.id} onStatusChange={refetchData} />
                                 </div>
                             </div>
                             <div className="flex flex-col space-y-2">
                                 <span className="text-sm text-gray-600 dark:text-gray-300">Name: {userData.name}</span>
                                 <span className="text-sm text-gray-600 dark:text-gray-300">Email: {userData.email}</span>
-                                {
-                                    userData?.active ? (
-                                        <div className="flex items-center justify-center px-2 py-1 mt-2 text-xs text-blue-500 bg-blue-100 rounded-full">
-                                            <CheckIcon className="w-3 h-3 mr-1" />
-                                            Email Confirmed
-                                        </div>
-                                    ) : (
-                                        <DialogReconfirmEmail email={userData.email} />
-                                    )
-                                }
+
                             </div>
                         </div>
-                        
+                        <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">Clients</span>
+                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                    {userData._count.clients}
+                                </span>
+                            </div>
+                            <div className="flex flex-col space-y-2">
+                                <span className="text-sm text-gray-600 dark:text-gray-300">Total Clients: {userData._count.clients}</span>
+                            </div>
+                            <Link href={`/dashboard/clients?user_id=${userId}`}>
+                                <div className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-500 text-blue-100 w-full text-center cursor-pointer">
+                                    Show Clients
+                                </div>
+                            </Link>
+                        </div>
                     </div>
                     {/* show 3 tombol to edit, delete, back */}
-                    <div className="flex justify-start">
+                    <div className="flex justify-end">
+
                         <button className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-red-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-red-600 dark:hover:bg-red-500 dark:bg-red-600 ml-2" >
                             Delete
                         </button>
-                        <DialogUpdateProfile userId={userData.id} onStatusChange={refetchData} isActive={userData.active} role={userData.role} name={userData.name} />
+                        <DialogUpdateUser userId={userData.id} onStatusChange={refetchData} isActive={userData.active} role={userData.role} />
                     </div>
 
                 </div>
