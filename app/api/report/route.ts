@@ -19,9 +19,10 @@ export async function GET(request: NextRequest) {
         }
 
         var eFaceApiKey = (token as { user: { token: string } })?.user?.token;
+        const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
 
         const res = await fetch(
-            `http://127.0.0.1:8000/logs?page=${page}&limit=${limit}&filter=${search}`
+            `${baseIdentifikaUrl}/logs?page=${page}&limit=${limit}&filter=${search}`
             , {
                 method: 'GET',
                 headers: {

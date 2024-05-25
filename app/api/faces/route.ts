@@ -241,8 +241,12 @@ export async function POST(request: NextRequest) {
         var eFaceApiKey = (token as { user: { token: string } })?.user?.token;
 
         const formData = await request.formData()
+        const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
 
-        const response = await fetch('http://127.0.0.1:8000/admin_face_registration', {
+
+        const response = await fetch(
+            `${baseIdentifikaUrl}/admin_face_registration`,
+        {
             method: 'POST',
             body: formData,
             mode: 'cors',

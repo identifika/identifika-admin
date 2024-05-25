@@ -217,9 +217,11 @@ export async function POST(request: NextRequest) {
         }
 
         var eFaceApiKey = (token as { user: { token: string } })?.user?.token;
+        const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
+
 
         const res = await fetch(
-            `http://127.0.0.1:8000/clients?`
+            `${baseIdentifikaUrl}/clients`
             , {
                 method: 'POST',
                 body: data,

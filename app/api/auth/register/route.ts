@@ -11,7 +11,9 @@ export async function POST(request: NextRequest) {
     formData.append('password', data.password)
     formData.append('role', 'user')
 
-    var user = await fetch('http://127.0.0.1:8000/register', {
+    const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
+
+    var user = await fetch(`${baseIdentifikaUrl}/register`, {
       method: 'POST',
       body: formData,
     });

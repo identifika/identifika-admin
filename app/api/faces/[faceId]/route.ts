@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: { params: { faceId: stri
                 }
             }
         })
-        
+
         return NextResponse.json({
             'status': 'success',
             'data': faces
@@ -57,15 +57,18 @@ export async function DELETE(request: NextRequest, { params }: { params: { faceI
 
         const formData = await request.formData()
         formData.append('identifier', params.faceId)
+        const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
 
-        const response = await fetch('http://127.0.0.1:8000/admin_delete_face', {
-            method: 'POST',
-            body: formData,
-            mode: 'cors',
-            headers: {
-                'e-face-api-key': eFaceApiKey,
-            }
-        });
+        const response = await fetch(
+            `${baseIdentifikaUrl}/admin_delete_face`,            
+            {
+                method: 'POST',
+                body: formData,
+                mode: 'cors',
+                headers: {
+                    'e-face-api-key': eFaceApiKey,
+                }
+            });
 
         if (response.status !== 200) {
             var res = await response.json()

@@ -64,7 +64,8 @@ export default function DetailLogsPage() {
     function downloadUrlMaker(url: string): string {
         const data = url.split('/')
         const filename = data[data.length - 1]
-        return `http://127.0.0.1:8000/error_bulk_import/${filename}`
+        const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
+        return `${baseIdentifikaUrl}/error_bulk_import/${filename}`
     }
 
     async function refresher() {

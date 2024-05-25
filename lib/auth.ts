@@ -11,11 +11,15 @@ async function loginWithExternalApi(email: string, password: string) {
     data.append('email', email);
     data.append('password', password);
 
-    var user = await fetch('http://127.0.0.1:8000/login', {
-      method: 'POST',
-      body: data,
-      mode: 'cors'
-    });
+    const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
+
+    var user = await fetch(
+      `${baseIdentifikaUrl}/login`,
+      {
+        method: 'POST',
+        body: data,
+        mode: 'cors'
+      });
 
 
     if (user.status !== 200) {

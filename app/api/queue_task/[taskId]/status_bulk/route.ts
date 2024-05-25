@@ -16,14 +16,17 @@ export async function GET(request: NextRequest, { params }: { params: { taskId: 
         var eFaceApiKey = (token as { user: { token: string } })?.user?.token;
 
         const taskId = params.taskId
+        const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
 
-        const response = await fetch(`http://127.0.0.1:8000/admin_bulk_register/${taskId}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'e-face-api-key': eFaceApiKey,
-            }
-        });
+        const response = await fetch(
+            `${baseIdentifikaUrl}/admin_bulk_register/${taskId}`,
+            {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'e-face-api-key': eFaceApiKey,
+                }
+            });
 
         if (response.status !== 200) {
             var res = await response.json()

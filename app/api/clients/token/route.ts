@@ -15,15 +15,18 @@ export async function POST(request: NextRequest) {
         var eFaceApiKey = (token as { user: { token: string } })?.user?.token;
 
         const formData = await request.formData()
+        const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
 
-        const response = await fetch('http://127.0.0.1:8000/generate_external_token', 
-        {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'e-face-api-key': eFaceApiKey,
-            }
-        });
+
+        const response = await fetch(
+            `${baseIdentifikaUrl}/generate_external_token`,
+            {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'e-face-api-key': eFaceApiKey,
+                }
+            });
 
         if (response.status !== 200) {
             var res = await response.json()
