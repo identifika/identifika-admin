@@ -26,7 +26,7 @@ async function fetchUserTotal() {
 
 export default  function DashboardPage() {
     const [data, setData] = useState<any>({ data: { faces: 0, users: 0, clients: 0 } })
-    const { data: userData } = useSession()
+    const { data: userData } = useSession() as any
     const isMounted = useRef(true)
 
     useEffect(() => {
