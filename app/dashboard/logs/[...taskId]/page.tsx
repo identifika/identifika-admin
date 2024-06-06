@@ -1,4 +1,5 @@
 'use client'
+import { API_URL } from "@/constants/url_constant"
 import { set } from "date-fns"
 import { useParams } from "next/navigation"
 import { useState, useEffect } from "react"
@@ -16,7 +17,7 @@ enum Status {
 
 async function fetchTaskLogs(taskId: string) {
     try {
-        const res = await fetch(`http://localhost:3000/api/queue_task/${taskId}`)
+        const res = await fetch(`${API_URL}/api/queue_task/${taskId}`)
         const data = await res.json()
         return data
     }
@@ -28,7 +29,7 @@ async function fetchTaskLogs(taskId: string) {
 
 async function fetchBulkRegisterStatus(taskId: string) {
     try {
-        const res = await fetch(`http://localhost:3000/api/queue_task/${taskId}/status_bulk`)
+        const res = await fetch(`${API_URL}/api/queue_task/${taskId}/status_bulk`)
         const data = await res.json()
         return data
     }

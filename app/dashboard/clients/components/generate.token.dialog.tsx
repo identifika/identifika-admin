@@ -6,6 +6,7 @@ import { IoAddCircle, IoClose } from "react-icons/io5";
 import { IoCopy } from "react-icons/io5";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner"
+import { API_URL } from "@/constants/url_constant";
 
 enum Status {
     IDLE,
@@ -20,7 +21,7 @@ async function generateExternalToken(
     const formData = new FormData();
     formData.append('client_id', clientId);
 
-    const res = await fetch(`http://localhost:3000/api/clients/token`, {
+    const res = await fetch(`${API_URL}/api/clients/token`, {
         method: 'POST',
         body: formData,
     });

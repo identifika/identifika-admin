@@ -1,4 +1,5 @@
 import { DialogHeader, Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { API_URL } from "@/constants/url_constant";
 import { useRef, useState } from "react";
 import { IoTrash } from "react-icons/io5";
 
@@ -17,7 +18,7 @@ async function revokeExternalToken(
     formData.append('client_id', clientId);
     formData.append('token', token);
 
-    const res = await fetch(`http://localhost:3000/api/clients/token/revoke?clientId=${clientId}`, {
+    const res = await fetch(`${API_URL}/api/clients/token/revoke?clientId=${clientId}`, {
         method: 'PUT',
         body: formData,
     });

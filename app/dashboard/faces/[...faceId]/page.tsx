@@ -1,10 +1,11 @@
 'use client'
+import { API_URL } from "@/constants/url_constant";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 async function getFaceData(faceId: string) {
     try {
-        const res = await fetch('http://localhost:3000/api/faces/' + faceId)
+        const res = await fetch(`${API_URL}/api/faces/${faceId}`)
         if (res.status === 200) {
             const data = await res.json()
             return data

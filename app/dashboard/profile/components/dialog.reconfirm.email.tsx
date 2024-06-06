@@ -1,4 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { API_URL } from "@/constants/url_constant";
 import { XCircleIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -16,7 +17,7 @@ type Props = {
 
 async function reconfirmEmail() {
     try {
-        const res = await fetch('http://localhost:3000/api/profile/confirm_email', {
+        const res = await fetch(`${API_URL}/api/profile/confirm_email`, {
             method: 'POST',
         });
         if (res.status === 200) {

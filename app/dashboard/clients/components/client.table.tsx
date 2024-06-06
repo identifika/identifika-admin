@@ -18,6 +18,7 @@ import GenerateTokenDialog from "./generate.token.dialog";
 import { IoAddCircle } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import ClientSearchComponent from "./client.search.component";
+import { API_URL } from "@/constants/url_constant";
 
 async function fetchClients(
     page: number,
@@ -25,7 +26,7 @@ async function fetchClients(
     search: string,
     clientId: string
 ) {
-    const res = await fetch(`http://localhost:3000/api/clients?search=${search}&page=${page}&limit=${limit}&userId=${clientId}`);
+    const res = await fetch(`${API_URL}/api/clients?search=${search}&page=${page}&limit=${limit}&userId=${clientId}`);
 
     if (!res.ok) {
         return {

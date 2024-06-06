@@ -1,5 +1,6 @@
 'use client';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { API_URL } from "@/constants/url_constant";
 import clsx from "clsx";
 import { useState } from "react";
 
@@ -21,7 +22,7 @@ async function changeStatus(isActive: boolean, userId: string) {
         const formData = new FormData();
         formData.append('active', isActive.toString());
 
-        const res = await fetch('http://localhost:3000/api/users/' + userId, {
+        const res = await fetch(`${API_URL}/api/users/${userId}`, {
             method: 'PUT',
             body: formData,
         });

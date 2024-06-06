@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useTransition } from 'react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useRouter } from 'next/navigation'
+import { API_URL } from '@/constants/url_constant'
 
 
 type AddClientProps = {
@@ -16,7 +17,7 @@ enum Status {
 
 async function fetchRecognitionType() {
     const res = await fetch(
-        `http://localhost:3000/api/recognition_type`,
+        `${API_URL}/api/recognition_type`,
     )
     if (!res.ok) {
         return {
@@ -66,7 +67,7 @@ export default function AddClientForm(props: AddClientProps) {
             formData.append('client_name', clientName);
 
             const res = await fetch(
-                `http://localhost:3000/api/clients`,
+                `${API_URL}/api/clients`,
                 {
                     method: 'POST',
                     body: formData,

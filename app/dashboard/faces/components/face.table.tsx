@@ -12,6 +12,7 @@ import { useState, useEffect, useRef } from "react";
 import { TbTrash } from "react-icons/tb";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import DeleteFaceDialog from "./delete.face.dialog";
+import { API_URL } from "@/constants/url_constant";
 
 
 async function fetchFaces(
@@ -22,7 +23,7 @@ async function fetchFaces(
 ) {
 
     const res = await fetch(
-        `http://localhost:3000/api/faces?page=${page}&limit=${limit}&search=${search}&client_id=${clientId}`,
+        `${API_URL}/api/faces?page=${page}&limit=${limit}&search=${search}&client_id=${clientId}`,
     )
     if (!res.ok) {
         return {
@@ -41,7 +42,7 @@ async function fetchFaces(
 
 async function deleteFace(faceId: string) {
     try {
-        const res = await fetch(`http://localhost:3000/api/faces/${faceId}`, {
+        const res = await fetch(`${API_URL}/api/faces/${faceId}`, {
             method: 'DELETE',
         })
         if (!res.ok) {

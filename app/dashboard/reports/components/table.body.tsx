@@ -1,3 +1,4 @@
+import { API_URL } from "@/constants/url_constant"
 
 
 async function fetchReport(
@@ -6,7 +7,7 @@ async function fetchReport(
     search: string
 ) {
     const res = await fetch(
-        `http://localhost:3000/api/report?page=${page}&limit=${limit}&search=${search}`,
+        `${API_URL}/api/report?page=${page}&limit=${limit}&search=${search}`,
     )
     if (!res.ok) {
         return {

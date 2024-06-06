@@ -6,10 +6,11 @@ import Link from "next/link"
 import { PiUsers } from "react-icons/pi"
 import { TbFaceId } from "react-icons/tb"
 import { useState, useEffect, useRef } from "react"
+import { API_URL } from "@/constants/url_constant"
 
 
 async function fetchUserTotal() {
-    const res = await fetch('http://localhost:3000/api/dashboard')
+    const res = await fetch(`${API_URL}/api/dashboard`)
     if (!res.ok) {
         return {
             data: {

@@ -7,10 +7,11 @@ import EditClientDialog from "./components/edit.client.dialog";
 import GenerateTokenDialog from "../components/generate.token.dialog";
 import RevokeTokenDialog from "../components/revoke.token.dialog";
 import DeleteClientDialog from "./components/delete.client.dialog";
+import { API_URL } from "@/constants/url_constant";
 
 async function getClientDetail(clientId: string) {
     try {
-        const res = await fetch('http://localhost:3000/api/clients/' + clientId)
+        const res = await fetch(`${API_URL}/api/clients/${clientId}`)
         if (res.status === 200) {
             const data = await res.json()
             return data

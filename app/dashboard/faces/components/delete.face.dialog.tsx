@@ -1,5 +1,6 @@
 
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { API_URL } from "@/constants/url_constant";
 import { useState } from "react";
 import { TbTrash } from "react-icons/tb";
 
@@ -27,7 +28,7 @@ export default function DeleteFaceDialog(props: DeleteFaceDialogProps) {
         setStatus(Status.LOADING);
         const formData = new FormData();
         formData.append('client_id', props.clientId);
-        const res = await fetch(`http://localhost:3000/api/faces/${props.faceId}`, {
+        const res = await fetch(`${API_URL}/api/faces/${props.faceId}`, {
             method: 'DELETE',
             body: formData,
         });

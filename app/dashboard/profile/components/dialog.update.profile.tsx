@@ -1,5 +1,6 @@
 'use client';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { API_URL } from "@/constants/url_constant";
 import clsx from "clsx";
 import { useState } from "react";
 
@@ -25,7 +26,7 @@ async function changeRole(role: string, userId: string, isActive: boolean, name:
         formData.append('active', isActive.toString());
         formData.append('name', name);
 
-        const res = await fetch('http://localhost:3000/api/profile', {
+        const res = await fetch(`${API_URL}/api/profile`, {
             method: 'PUT',
             body: formData,
         });

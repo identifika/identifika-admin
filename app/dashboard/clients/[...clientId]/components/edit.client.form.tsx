@@ -1,3 +1,4 @@
+import { API_URL } from "@/constants/url_constant"
 import { useState, useEffect } from "react"
 
 type EditClientProps = {
@@ -34,7 +35,7 @@ export default function EditClientForm(props: EditClientProps) {
         try {
             const formData = new FormData()
             formData.append('client_name', clientName)
-            const res = await fetch('http://localhost:3000/api/clients/' + props.clientId, {
+            const res = await fetch(`${API_URL}/api/clients/${props.clientId}`, {
                 method: 'PUT',
                 body: formData,
             })

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/hover-card"
 import { FaQuestionCircle } from "react-icons/fa"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { API_URL } from "@/constants/url_constant"
 
 enum Status {
     IDLE,
@@ -25,7 +26,7 @@ type AddFaceFormProps = {
 
 async function fetchClients() {
     const res = await fetch(
-        `http://localhost:3000/api/clients`,
+        `${API_URL}/api/clients`,
     )
     if (!res.ok) {
         return {
@@ -82,7 +83,7 @@ export default function AddFaceForm(props: AddFaceFormProps) {
             formData.append('image', image as Blob)
 
             const res = await fetch(
-                `http://localhost:3000/api/faces`,
+                `${API_URL}/api/faces`,
                 {
                     method: 'POST',
                     body: formData,

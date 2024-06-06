@@ -7,10 +7,11 @@ import { useEffect, useState } from "react"
 import DialogActive from "./components/dialog.active";
 import DialogChangeRole from "./components/dialog.change.role";
 import DialogUpdateUser from "./components/dialog.update.user";
+import { API_URL } from "@/constants/url_constant";
 
 async function getUsers(userId: string) {
     try {
-        const res = await fetch('http://localhost:3000/api/users/' + userId)
+        const res = await fetch(`${API_URL}/api/users/${userId}`)
         if (res.status === 200) {
             const data = await res.json()
             return data

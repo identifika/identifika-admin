@@ -21,10 +21,11 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { BiListOl } from "react-icons/bi";
 import { useState, useEffect } from "react";
+import { API_URL } from "@/constants/url_constant";
 
 async function getUsers() {
     try {
-        const res = await fetch('http://localhost:3000/api/profile')
+        const res = await fetch(`${API_URL}/api/profile`)
         if (res.status === 200) {
             const data = await res.json()
             return data

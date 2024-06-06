@@ -219,7 +219,6 @@ export async function POST(request: NextRequest) {
         var eFaceApiKey = (token as { user: { token: string } })?.user?.token;
         const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
 
-
         const res = await fetch(
             `${baseIdentifikaUrl}/clients`
             , {
@@ -230,6 +229,8 @@ export async function POST(request: NextRequest) {
                 }
             }
         )
+
+        console.log(res);
 
         if (res.status !== 200) {
             var response = await res.json()

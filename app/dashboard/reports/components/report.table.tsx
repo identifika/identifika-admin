@@ -1,5 +1,6 @@
 'use client';
 
+import { API_URL } from "@/constants/url_constant";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight, MoreVertical, MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +14,7 @@ async function fetchReport(
 ) {
     try {
         const res = await fetch(
-            `http://localhost:3000/api/report?page=${page}&limit=${limit}&search=${search}`,
+            `${API_URL}/api/report?page=${page}&limit=${limit}&search=${search}`,
         )
 
         if (!res.ok) {
