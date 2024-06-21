@@ -33,7 +33,7 @@ model faces {
   knn_indexing        Int
   face_representation FaceRepresentation?
   client_id           String              @map("client_id") @db.ObjectId
-  client              clients             @relation(fields: [client_id], references: [id])
+  client              clients             @relation(fields: [client_id], references: [id], onDelete: Cascade)
 
   @@map("faces")
 }
