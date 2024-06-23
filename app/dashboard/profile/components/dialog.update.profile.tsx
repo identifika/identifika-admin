@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { API_URL } from "@/constants/url_constant";
 import clsx from "clsx";
 import { useState } from "react";
+import { TbEdit } from "react-icons/tb";
 
 enum Status {
     IDLE,
@@ -81,7 +82,8 @@ export default function DialogUpdateProfile(props: Props) {
         }}>
             <DialogTrigger asChild>
                 <button className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600 ml-2" >
-                    Edit
+                    <TbEdit className="w-5 h-5" />
+                    <span>Edit</span>
                 </button>
             </DialogTrigger>
             <DialogContent>

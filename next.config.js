@@ -7,4 +7,7 @@ module.exports = {
   experimental: {
     serverComponentsExternalPackages: ['mongoose']
   },
+  env: {
+    IDENTIFIKA_API_URL: process.env.IDENTIFIKA_API_URL,
+  }
 }

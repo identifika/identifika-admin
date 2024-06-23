@@ -8,6 +8,8 @@ import { useEffect, useState } from "react"
 import DialogUpdateProfile from "./components/dialog.update.profile";
 import DialogReconfirmEmail from "./components/dialog.reconfirm.email";
 import { API_URL } from "@/constants/url_constant";
+import DeleteProfileDialog from "./components/dialog.delete.profile";
+import { signOut } from "next-auth/react";
 
 async function getUsers() {
     try {
@@ -60,6 +62,14 @@ export default function Page() {
         setUserData(data.data)
     }
 
+    const logout = async () => {
+        try {
+            signOut();
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
         <div className="flex flex-col space-y-4">
             <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-200 py-4">
@@ -94,13 +104,11 @@ export default function Page() {
                                 }
                             </div>
                         </div>
-                        
+
                     </div>
                     {/* show 3 tombol to edit, delete, back */}
                     <div className="flex justify-start">
-                        <button className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-red-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-red-600 dark:hover:bg-red-500 dark:bg-red-600 ml-2" >
-                            Delete
-                        </button>
+                        <DeleteProfileDialog userId={userData.id} afterDelete={logout} />
                         <DialogUpdateProfile userId={userData.id} onStatusChange={refetchData} isActive={userData.active} role={userData.role} name={userData.name} />
                     </div>
 

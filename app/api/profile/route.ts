@@ -109,3 +109,34 @@ export async function PUT(request: NextRequest) {
         }, { status: 500 })
     }
 }
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
+
+        if (!token) {
+            return NextResponse.json({
+                'status': 'error',
+                'message': 'Unauthorized'
+            }, { status: 401 })
+        }
+
+        var userId = (token as { user: { _id: string } })?.user?._id;
+
+        const user = await prisma.users.delete({
+            where: {
+                id: userId
+            }
+        })
+
+        return NextResponse.json({
+            'status': 'success',
+            'data': user
+        })
+    } catch (error) {
+        return NextResponse.json({
+            'status': 'error',
+            'message': error.message
+        }, { status: 500 })
+    }
+}

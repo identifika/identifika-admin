@@ -106,9 +106,9 @@ export default function Page() {
                     {/* show 3 tombol to edit, delete, back */}
                     <div className="flex justify-end">
 
-                        <button className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-red-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-red-600 dark:hover:bg-red-500 dark:bg-red-600 ml-2" >
+                        {/* <button className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-red-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-red-600 dark:hover:bg-red-500 dark:bg-red-600 ml-2" >
                             Delete
-                        </button>
+                        </button> */}
                         <DialogUpdateUser userId={userData.id} onStatusChange={refetchData} isActive={userData.active} role={userData.role} />
                     </div>
 

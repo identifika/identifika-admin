@@ -57,11 +57,11 @@ model clients {
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
   external_token      String
-  user                users              @relation(fields: [user_id], references: [id])
+  user                users              @relation(fields: [user_id], references: [id], onDelete: Cascade)
   faces               faces[]
   recognition_type    RecognitionType
   queue_task          queue_task[]
-  recognition_types   recognition_types? @relation(fields: [recognition_typesId], references: [id])
+  recognition_types   recognition_types? @relation(fields: [recognition_typesId], references: [id], onDelete: SetNull)
   recognition_typesId String?            @db.ObjectId
 
   @@map("clients")
@@ -87,9 +87,9 @@ model queue_task {
   task_name      String
   status         String
   client_id      String   @map("client_id") @db.ObjectId
-  client         clients  @relation(fields: [client_id], references: [id])
+  client         clients  @relation(fields: [client_id], references: [id], onDelete: Cascade)
   user_id        String   @map("user_id") @db.ObjectId
-  user           users    @relation(fields: [user_id], references: [id])
+  user           users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   message        String
   csv_error_file String?
   created_at     DateTime @default(now())
