@@ -1,5 +1,6 @@
 'use client';
 
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { API_URL } from "@/constants/url_constant";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight, MoreVertical, MoreVerticalIcon } from "lucide-react";
@@ -112,11 +113,72 @@ export default function ReportTable(props: ReportTableProps) {
                                         data.data.map((report: any, index: number) => (
                                             <tr key={index}>
                                                 <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
-                                                    <div>
-                                                        <h2 className="font-medium text-gray-800 dark:text-white ">
-                                                            {report.endpoint}
-                                                        </h2>
-                                                    </div>
+                                                    <Dialog>
+                                                        <DialogTrigger asChild>
+                                                            <div>
+                                                                <h2 className="font-medium text-gray-800 dark:text-white ">
+                                                                    {report.endpoint}
+                                                                </h2>
+                                                            </div>
+                                                        </DialogTrigger>
+                                                        <DialogContent className={"lg:max-w-screen-lg overflow-y-scroll max-h-screen"}>
+                                                            <DialogHeader>
+                                                                <DialogTitle>
+                                                                    Request Body
+                                                                </DialogTitle>
+                                                            </DialogHeader>
+                                                            <div>
+                                                                {/* method */}
+                                                                <div className="text-sm font-medium text-gray-800 dark:text-white">
+                                                                    Method
+                                                                </div>
+                                                                <div className="text-sm font-normal text-gray-800 dark:text-white">
+                                                                    {report.method}
+                                                                </div>
+                                                                {/* status */}
+                                                                <div className="text-sm font-medium text-gray-800 dark:text-white mt-4">
+                                                                    Status
+                                                                </div>
+                                                                <div className={
+                                                                    clsx(
+                                                                        "text-sm font-medium whitespace-nowrap",
+                                                                        {
+                                                                            "text-green-500": report.status_code < 300 && report.status_code >= 200,
+                                                                            "text-red-500": report.status_code >= 400,
+                                                                        }
+                                                                    )
+                                                                }>
+                                                                    {report.status_code}
+                                                                </div>
+                                                                {/* headers */}
+                                                                <div className="text-sm font-medium text-gray-800 dark:text-white mt-4">
+                                                                    Headers
+                                                                </div>
+                                                                <div className="text-sm font-normal text-gray-800 dark:text-white lg:max-w-screen-lg overflow-x-auto">
+                                                                    <pre>
+                                                                        {
+                                                                            JSON.stringify(report.headers, null, 2)
+                                                                        }
+                                                                    </pre>
+                                                                </div>
+                                                                {/* response */}
+                                                                <div className="text-sm font-medium text-gray-800 dark:text-white mt-4">
+                                                                    Response
+                                                                </div>
+                                                                <div className="text-sm font-normal text-gray-800 dark:text-white lg:max-w-screen-lg overflow-x-auto">
+                                                                    <pre>
+                                                                        {
+                                                                            report.response && typeof report.response === "string" && report.response.startsWith("{") && report.response.endsWith("}")
+                                                                                ? JSON.parse(JSON.stringify(report.response, null, 2))
+                                                                                : report.response
+                                                                        }
+                                                                    </pre>
+                                                                </div>
+                                                            </div>
+
+                                                        </DialogContent>
+
+                                                    </Dialog>
                                                 </td>
                                                 <td className="px-12 py-4 text-sm font-medium whitespace-nowrap">
                                                     <div>

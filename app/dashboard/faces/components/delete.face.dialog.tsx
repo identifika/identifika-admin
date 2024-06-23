@@ -49,7 +49,6 @@ export default function DeleteFaceDialog(props: DeleteFaceDialogProps) {
             <DialogTrigger asChild>
                 <button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-red-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-red-600 dark:hover:bg-red-500 dark:bg-red-600" >
                     <TbTrash className="w-5 h-5" />
-                    <span>Delete</span>
                 </button>
             </DialogTrigger>
             <DialogContent>

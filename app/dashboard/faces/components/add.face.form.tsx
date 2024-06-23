@@ -22,6 +22,9 @@ enum Status {
 
 type AddFaceFormProps = {
     clientId?: any,
+    faceId?: any,
+    name?: any,
+    clientName?: any,
 }
 
 async function fetchClients() {
@@ -41,8 +44,8 @@ async function fetchClients() {
 export default function AddFaceForm(props: AddFaceFormProps) {
     const [clients, setClients] = useState<any[]>([])
     const [selectedClient, setSelectedClient] = useState<any>(null)
-    const [identifier, setIdentifier] = useState<any>(null)
-    const [name, setName] = useState<any>(null)
+    const [identifier, setIdentifier] = useState<any>('')
+    const [name, setName] = useState<any>('')
     const [image, setImage] = useState<File | null>(null)
     const [status, setStatus] = useState<Status>(Status.IDLE)
 
@@ -68,6 +71,16 @@ export default function AddFaceForm(props: AddFaceFormProps) {
         fetchClients().then((data) => {
             setClients(data.data)
         })
+        if (props.faceId !== undefined && props.faceId !== null) {
+            setIdentifier(props.faceId)
+        }
+        if (props.name !== undefined && props.name !== null) {
+            setName(props.name)
+        }
+        if (props.clientId !== undefined && props.clientId !== null) {
+            setSelectedClient(props.clientId)
+        }
+
     }, [])
 
     const onSaveClick = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -105,7 +118,11 @@ export default function AddFaceForm(props: AddFaceFormProps) {
             setStatus(Status.SUCCESS)
 
             const data = await res.json()
+
+            return data
         } catch (error) {
+            setStatus(Status.ERROR)
+
             return {
                 data: [],
                 meta: {
@@ -115,7 +132,6 @@ export default function AddFaceForm(props: AddFaceFormProps) {
                     total: 0,
                 },
             }
-            setStatus(Status.ERROR)
         }
     }
 
@@ -129,12 +145,18 @@ export default function AddFaceForm(props: AddFaceFormProps) {
                             <div className="flex flex-col space-y-4 my-4">
                                 <div className="flex flex-col space-y-4">
                                     <label className="text-gray-800 dark:text-gray-200">Client</label>
-                                    <select className="border border-gray-200 dark:border-gray-800 rounded-lg p-2" onChange={onSelectedClient}>
-                                        <option value="">Select a client</option>
-                                        {clients.map((client) => {
-                                            return <option key={client.id} value={client.id}>{client.client_name}</option>
-                                        })}
-                                    </select>
+                                    {
+                                        props.clientId !== undefined && props.clientId !== null ? (
+                                            <input type="text" className="border border-gray-200 dark:border-gray-800 rounded-lg p-2" value={props.clientName} disabled />
+                                        ) : (
+                                            <select className="border border-gray-200 dark:border-gray-800 rounded-lg p-2" onChange={onSelectedClient}>
+                                                <option value="">Select a client</option>
+                                                {clients.map((client) => {
+                                                    return <option key={client.id} value={client.id}>{client.client_name}</option>
+                                                })}
+                                            </select>
+                                        )
+                                    }
                                 </div>
                                 <div className="flex flex-col space-y-4">
 
@@ -153,11 +175,11 @@ export default function AddFaceForm(props: AddFaceFormProps) {
                                             </p>
                                         </HoverCardContent>
                                     </HoverCard>
-                                    <input className="border border-gray-200 dark:border-gray-800 rounded-lg p-2" onChange={onIdentifierChange} ref={ref} />
+                                    <input className="border border-gray-200 dark:border-gray-800 rounded-lg p-2" onChange={onIdentifierChange} ref={ref} value={identifier} disabled={props.faceId !== undefined && props.faceId !== null} />
                                 </div>
                                 <div className="flex flex-col space-y-4">
                                     <label className="text-gray-800 dark:text-gray-200">Name</label>
-                                    <input type="text" className="border border-gray-200 dark:border-gray-800 rounded-lg p-2" onChange={onNameChange} ref={ref} />
+                                    <input type="text" className="border border-gray-200 dark:border-gray-800 rounded-lg p-2" onChange={onNameChange} ref={ref} value={name} disabled={props.name !== undefined && props.name !== null} />
                                 </div>
                                 <div className="flex flex-col space-y-4">
                                     <label className="text-gray-800 dark:text-gray-200">Image</label>

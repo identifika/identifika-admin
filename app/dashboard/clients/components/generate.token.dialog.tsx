@@ -63,9 +63,12 @@ export default function GenerateTokenDialog(props: GenerateTokenDialogProps) {
     }
 
     const onCopy = () => {
-        if (token) {
-            navigator.clipboard.writeText(token);
-            toast('Token copied to clipboard');
+        if (token && navigator.clipboard) {
+            navigator.clipboard.writeText(token).then(() => {
+                toast.success('Token copied to clipboard');
+            }).catch(() => {
+                toast.error('Failed to copy token');
+            })
         }
     }
 
@@ -86,13 +89,13 @@ export default function GenerateTokenDialog(props: GenerateTokenDialogProps) {
                     <span>Generate Token</span>
                 </div>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className={token ? 'overflow-y-auto' : ''}>
                 <DialogHeader >
                     <DialogTitle>
                         Generate Access Token
                     </DialogTitle>
                 </DialogHeader>
-                <div className="max-w-md w-full space-y-4">
+                <div >
                     <DialogDescription>
                         You can generate an access token for this client. This token will be used to authenticate the client when you make requests to the API.
                     </DialogDescription>
@@ -121,10 +124,10 @@ export default function GenerateTokenDialog(props: GenerateTokenDialogProps) {
                                 case Status.SUCCESS:
                                     return (
                                         <div className="flex flex-col gap-4 mt-4 max-w-md">
-                                            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md">Your token has been generated successfully. You can copy it below <br/>{token}</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md">Your token has been generated successfully. You can copy it below <br />{token}</p>
 
                                             <div onClick={onCopy}
-                                            className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-green-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-green-600 dark:hover:bg-green-500 dark:bg-green-600 mt-4">
+                                                className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-green-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-green-600 dark:hover:bg-green-500 dark:bg-green-600 mt-4">
                                                 <IoCopy className="w-5 h-5" />
                                                 <span >Copy Token</span>
                                             </div>

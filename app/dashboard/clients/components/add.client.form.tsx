@@ -35,6 +35,7 @@ export default function AddClientForm(props: AddClientProps) {
     const [selectedRecognitionType, setSelectedRecognitionType] = useState<any>(null)
     const [status, setStatus] = useState<Status>(Status.IDLE)
     const [clientName, setClientName] = useState<string>('')
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
     useEffect(() => {
         fetchRecognitionType().then((data) => {
@@ -55,7 +56,7 @@ export default function AddClientForm(props: AddClientProps) {
         e.preventDefault()
 
         if (!selectedRecognitionType) {
-            console.error('Recognition Type is required')
+            setErrorMessage('Recognition Type is required')
             return
         }
 
@@ -74,12 +75,15 @@ export default function AddClientForm(props: AddClientProps) {
                 }
             )
             if (!res.ok) {
+                const data = await res.json()
+                setErrorMessage(data.message)
                 setStatus(Status.ERROR)
                 return
             }
             setStatus(Status.SUCCESS)
         } catch (error) {
             console.error('An error occurred:', error)
+            setErrorMessage(`Failed to add client: ${error.message}`)
             setStatus(Status.ERROR)
         }
     }
@@ -136,7 +140,9 @@ export default function AddClientForm(props: AddClientProps) {
                                     Error
                                 </AlertTitle>
                                 <AlertDescription>
-                                    Failed to add client
+                                    {
+                                        errorMessage ?? 'An error occurred while adding client'
+                                    }
                                 </AlertDescription>
                             </Alert>
                         default:

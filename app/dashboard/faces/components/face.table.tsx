@@ -40,23 +40,6 @@ async function fetchFaces(
     return data
 }
 
-async function deleteFace(faceId: string) {
-    try {
-        const res = await fetch(`${API_URL}/api/faces/${faceId}`, {
-            method: 'DELETE',
-        })
-        if (!res.ok) {
-            return {
-                status: 'error',
-                message: 'Failed to delete face'
-            };
-        }
-        return res.json();
-    } catch (error) {
-        console.error(error)
-        return null
-    }
-}
 
 type FaceTableProps = {
     page: number
@@ -126,7 +109,7 @@ export default function FaceTable(props: FaceTableProps) {
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                                            className="px-6 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
                                         >
                                             Username
                                         </th>
@@ -136,7 +119,7 @@ export default function FaceTable(props: FaceTableProps) {
                                         >
                                             Client
                                         </th>
-                                        <th scope="col" className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <th scope="col" className="px-8 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             Actions
                                         </th>
                                     </tr>
@@ -153,7 +136,7 @@ export default function FaceTable(props: FaceTableProps) {
                                                         </h2>
                                                     </div>
                                                 </td>
-                                                <td className="px-12 py-4 text-sm font-medium whitespace-nowrap">
+                                                <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
                                                     <div>
                                                         <h2 className="font-medium text-gray-800 dark:text-white ">
                                                             {face.user_name}
@@ -167,7 +150,8 @@ export default function FaceTable(props: FaceTableProps) {
                                                         </h2>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
+                                                <td className="px-4 py-4 text-sm font-medium whitespace-nowrap flex items-center gap-x-4">
+                                                    <AddFaceDialog afterSubmit={refetchData} faceId={face.id} name={face.user_name} clientId={face.client_id} clientName={face.client.client_name} />
                                                     <DeleteFaceDialog faceId={face.id} clientId={face.client_id} afterDelete={refetchData} />
                                                 </td>
                                             </tr>

@@ -230,8 +230,6 @@ export async function POST(request: NextRequest) {
             }
         )
 
-        console.log(res);
-
         if (res.status !== 200) {
             var response = await res.json()
             return NextResponse.json({

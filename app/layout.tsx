@@ -12,7 +12,7 @@ import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: 'Home',
-  description: 'Home page '
+  description: 'Home page of Identifika.'
 }
 
 function MainLayout({ children }) {
@@ -31,11 +31,11 @@ function MainLayout({ children }) {
                 <FetchConfig baseUrl='/api'>
                   <Navbar />
                   <div className=''>{children}</div>
-                  <Toaster />
                 </FetchConfig>
               </AtomicState>
             </AuthProvider>
           </main>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
