@@ -25,7 +25,8 @@ export async function GET(request: NextRequest, { params }: { params: { taskId: 
                 mode: 'cors',
                 headers: {
                     'e-face-api-key': eFaceApiKey,
-                }
+                },
+                cache: 'no-cache',
             });
 
         if (response.status !== 200) {
