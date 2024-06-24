@@ -28,8 +28,9 @@ export async function GET(request: NextRequest) {
                 headers: {
                     'Content-Type': 'application/json',
                     'e-face-api-key': eFaceApiKey,
-                }
-            }
+                },
+                cache: 'no-cache',
+            },
         )
 
         if (!res.ok) {
