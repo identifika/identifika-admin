@@ -7,13 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Post {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  title   String
-  date    DateTime @default(now())
-  content String
-}
-
 model users {
   id         String       @id @default(auto()) @map("_id") @db.ObjectId
   email      String       @unique
@@ -63,6 +56,9 @@ model clients {
   queue_task          queue_task[]
   recognition_types   recognition_types? @relation(fields: [recognition_typesId], references: [id], onDelete: SetNull)
   recognition_typesId String?            @db.ObjectId
+  parent_id           String?            @db.ObjectId
+  parent              clients?           @relation("ParentToChildren", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children            clients[]          @relation("ParentToChildren")
 
   @@map("clients")
 }
@@ -92,5 +88,6 @@ model queue_task {
   user           users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   message        String
   csv_error_file String?
+  webhook_url    String?
   created_at     DateTime @default(now())
 }

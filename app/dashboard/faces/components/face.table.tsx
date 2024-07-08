@@ -176,8 +176,17 @@ export default function FaceTable(props: FaceTableProps) {
                         href={
                             props.page === 1 || props.page === 0
                                 ? "#"
-                                : `/dashboard/faces?page=${props.page - 1}&limit=${props.limit}&search=${props.search}&client_id=${props.clientId}`
+                                : {
+                                    pathname: "/dashboard/faces",
+                                    query: {
+                                        page: props.page - 1,
+                                        limit: props.limit,
+                                        ...props.search && { search: props.search },
+                                        ...props.clientId && { clientId: props.clientId },
+                                    },
+                                }
                         }
+                        scroll={false}
                         className={
                             clsx(
                                 "flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2",
@@ -194,9 +203,18 @@ export default function FaceTable(props: FaceTableProps) {
                         href={
                             props.page === data.meta.totalPages || data.meta.totalPages === 0 
                                 ? "#"
-                                :
-                                `/dashboard/faces?page=${props.page + 1}&limit=${props.limit}&search=${props.search}&client_id=${props.clientId}`
+                                : {
+                                    pathname: "/dashboard/faces",
+                                    query: {
+                                        page: props.page + 1,
+                                        limit: props.limit,
+                                        ...props.search && { search: props.search },
+                                        ...props.clientId && { clientId: props.clientId },
+                                    },
+                                
+                                }
                         }
+                        scroll={false}
                         className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
                     >
                         <span>Next</span>

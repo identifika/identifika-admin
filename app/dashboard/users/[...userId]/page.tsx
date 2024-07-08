@@ -96,7 +96,7 @@ export default function Page() {
                             <div className="flex flex-col space-y-2">
                                 <span className="text-sm text-gray-600 dark:text-gray-300">Total Clients: {userData._count.clients}</span>
                             </div>
-                            <Link href={`/dashboard/clients?user_id=${userId}`}>
+                            <Link href={`/dashboard/clients?userId=${userId}`}>
                                 <div className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-500 text-blue-100 w-full text-center cursor-pointer">
                                     Show Clients
                                 </div>

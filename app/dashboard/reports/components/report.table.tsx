@@ -239,8 +239,16 @@ export default function ReportTable(props: ReportTableProps) {
                         href={
                             props.page === 1 || props.page === 0
                                 ? "#"
-                                : `/dashboard/reports?page=${props.page - 1}&limit=${props.limit}&search=${props.search}`
+                                : {
+                                    pathname: `/dashboard/reports`,
+                                    query: {
+                                        page: props.page - 1,
+                                        limit: props.limit,
+                                        ...(props.search && { search: props.search }),
+                                    }
+                                }
                         }
+                        scroll={false}
                         className={
                             clsx(
                                 "flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2",
@@ -257,8 +265,16 @@ export default function ReportTable(props: ReportTableProps) {
                         href={
                             props.page === data.meta.total_page || props.page === 0 || props.page > data.meta.total_page
                                 ? "#"
-                                : `/dashboard/reports?page=${props.page + 1}&limit=${props.limit}&search=${props.search}`
+                                : {
+                                    pathname: `/dashboard/reports`,
+                                    query: {
+                                        page: props.page + 1,
+                                        limit: props.limit,
+                                        ...(props.search && { search: props.search }),
+                                    }
+                                }
                         }
+                        scroll={false}
                         className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
                     >
                         <ArrowRight className="w-5 h-5 rtl:-scale-x-100" />

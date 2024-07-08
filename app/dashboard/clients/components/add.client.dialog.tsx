@@ -3,9 +3,11 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { IoAddCircle, IoClose } from "react-icons/io5";
 import AddClientForm from "./add.client.form";
+import { useState, useEffect } from "react";
+import { API_URL } from "@/constants/url_constant";
 
+export default function AddClientDialog({ afterSubmit: afterSubmit = () => { },  user: user}) {
 
-export default function AddClientDialog({afterSubmit: afterSubmit = () => {}}) {
     return (
         <Dialog onOpenChange={(open) => {
             if (!open) {
@@ -25,10 +27,19 @@ export default function AddClientDialog({afterSubmit: afterSubmit = () => {}}) {
                     </DialogTitle>
                 </DialogHeader>
                 <div>
-                    <DialogDescription>
-                        You can add a face by importing a file
-                    </DialogDescription>
-                    <AddClientForm/>
+                    {
+                        (user && user.active) ?
+                            <>
+
+                                <DialogDescription>
+                                    You can add a face by importing a file
+                                </DialogDescription>
+                                <AddClientForm />
+                            </>
+                            : <DialogDescription>
+                                Please confirm your email address to add a client
+                            </DialogDescription>
+                    }
                 </div>
             </DialogContent>
         </Dialog>

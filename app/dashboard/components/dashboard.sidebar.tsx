@@ -46,8 +46,6 @@ type User = {
     active: boolean;
 }
 
-
-
 export default function DashboardSidebar() {
     const pathname = usePathname();
     const [user, setUser] = useState<User | null>(null);
@@ -131,7 +129,7 @@ export default function DashboardSidebar() {
                                 pathname === "/dashboard/clients" ? "bg-gray-100 dark:bg-gray-700" : ""
                             )
                         }
-                        href="/dashboard/clients"
+                        href='/dashboard/clients'
                     >
                         <Building2Icon className="w-5 h-5" />
                         <span className="mx-4 font-medium">Client</span>

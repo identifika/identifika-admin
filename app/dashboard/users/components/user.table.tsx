@@ -12,9 +12,17 @@ async function fetchUsers(
     limit: number,
     search: string
 ) {
+    const urlSearchParams = new URLSearchParams()
+    urlSearchParams.append('page', page.toString())
+    urlSearchParams.append('limit', limit.toString())
+    if (search) {
+        urlSearchParams.append('search', search)
+    }
+
     const res = await fetch(
-        `${API_URL}/api/users?page=${page}&limit=${limit}&search=${search}`
+        `${API_URL}/api/users?${urlSearchParams.toString()}`,
     )
+
     if (!res.ok) {
         return {
             data: [],
@@ -171,8 +179,17 @@ export default function UserTable(props: UserTableProps) {
                         href={
                             props.page === 1 || props.page === 0
                                 ? "#"
-                                : `/dashboard/users?page=${props.page - 1}&limit=${props.limit}&search=${props.search}`
+                                : {
+                                    pathname: "/dashboard/users",
+                                    query: {
+                                        page: props.page - 1,
+                                        limit: props.limit,
+                                        ...(props.search && { search: props.search }),
+                                    },
+
+                                }
                         }
+                        scroll={false}
                         className={
                             clsx(
                                 "flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2",
@@ -185,17 +202,26 @@ export default function UserTable(props: UserTableProps) {
                         <ArrowLeft className="w-5 h-5 rtl:-scale-x-100" />
                         <span>previous</span>
                     </Link>
-                    <a
+                    <Link
                         href={
                             props.page === data.meta.totalPages
                                 ? "#"
-                                : `/dashboard/users?page=${props.page + 1}&limit=${props.limit}&search=${props.search}`
+                                : {
+                                    pathname: "/dashboard/users",
+                                    query: {
+                                        page: props.page + 1,
+                                        limit: props.limit,
+                                        ...(props.search && { search: props.search }),
+                                    },
+
+                                }
                         }
+                        scroll={false}
                         className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
                     >
                         <span>Next</span>
                         <ArrowRight className="w-5 h-5 rtl:-scale-x-100" />
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

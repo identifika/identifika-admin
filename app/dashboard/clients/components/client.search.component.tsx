@@ -7,6 +7,8 @@ type ClientSearchComponentProps = {
     page: number
     limit: number
     search: string
+    userId: string
+    parentId: string
 }
 
 export default function ClientSearchComponent(props: ClientSearchComponentProps) {
@@ -17,7 +19,19 @@ export default function ClientSearchComponent(props: ClientSearchComponentProps)
     function onSearchFunction(e: any) {
         e.preventDefault()
         const search = searchText.current?.value;
-        router.push(`/dashboard/clients?page=${props.page}&limit=${props.limit}&search=${search}`)
+        const urlSearchParams = new URLSearchParams();
+        urlSearchParams.append('page', props.page.toString());
+        urlSearchParams.append('limit', props.limit.toString());
+        if (search) {
+            urlSearchParams.append('search', search);
+        }
+        if (props.userId) {
+            urlSearchParams.append('userId', props.userId);
+        }
+        if (props.parentId) {
+            urlSearchParams.append('parentId', props.parentId);
+        }
+        router.push(`/dashboard/clients?${urlSearchParams.toString()}`)
 
     }
 

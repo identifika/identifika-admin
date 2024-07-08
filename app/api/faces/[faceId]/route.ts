@@ -90,3 +90,52 @@ export async function DELETE(request: NextRequest, { params }: { params: { faceI
         }, { status: 500 })
     }
 }
+
+export async function PUT(request: NextRequest, { params }: { params: { faceId: string } }) {
+    try {
+        const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
+
+        if (!token) {
+            return NextResponse.json({
+                'status': 'error',
+                'message': 'Unauthorized'
+            }, { status: 401 })
+        }
+
+        var eFaceApiKey = (token as { user: { token: string } })?.user?.token;
+
+        const formData = await request.formData()
+        formData.append('identifier', params.faceId)
+        const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
+
+        const response = await fetch(
+            `${baseIdentifikaUrl}/admin_face_registration/${params.faceId}`,
+            {
+                method: 'PUT',
+                body: formData,
+                mode: 'cors',
+                headers: {
+                    'e-face-api-key': eFaceApiKey,
+                }
+            });
+
+        if (response.status !== 200) {
+            var res = await response.json()
+            return NextResponse.json({
+                res
+            }, { status: response.status })
+        } else {
+            return NextResponse.json({
+                'status': 'success',
+                'message': 'Face updated'
+            }, { status: 200 })
+        }
+
+    } catch (error) {
+        console.error(error)
+        return NextResponse.json({
+            'status': 'error',
+            'message': error
+        }, { status: 500 })
+    }
+}

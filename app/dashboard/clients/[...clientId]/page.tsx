@@ -8,6 +8,7 @@ import GenerateTokenDialog from "../components/generate.token.dialog";
 import RevokeTokenDialog from "../components/revoke.token.dialog";
 import DeleteClientDialog from "./components/delete.client.dialog";
 import { API_URL } from "@/constants/url_constant";
+import clsx from "clsx";
 
 async function getClientDetail(clientId: string) {
     try {
@@ -37,13 +38,40 @@ export default function DetailClientPage() {
                 face_model: '',
                 recognition_type: ''
             },
+            parent_id: '',
+            parent: {
+                client_name: ''
+            },
+            children: [
+                {
+                    id: '',
+                    client_name: '',
+                    external_token: '',
+                    recognition_type: {
+                        face_detector: '',
+                        face_model: '',
+                        recognition_type: ''
+                    },
+                    user_id: '',
+                    _count: {
+                        faces: 0
+                    }
+                }
+            ],
             user_id: '',
             user: {
                 name: '',
                 email: ''
             },
             _count: {
-                faces: 0
+                faces: 0,
+                children: 0
+            },
+            meta: {
+                page: 0,
+                limit: 0,
+                totalPages: 0,
+                total: 0
             }
         }
     })
@@ -77,30 +105,47 @@ export default function DetailClientPage() {
                 Client Detail
             </h1>
             <div className="flex flex-col space-y-4">
-                {/* create a container */}
+               
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Client Information</h2>
-                        <div className="flex flex-col space-y-2">
-                            <div>
-                                <span className="text-gray-800 dark:text-gray-200">{clientData.data.client_name}</span>
-                            </div>
-                            {
-                                // button to generate token if token is null or empty
-                                (clientData.data.external_token == null || clientData.data.external_token == '') ? (
-                                    <div>
-                                        <GenerateTokenDialog clientId={clientId[0]} afterGenerate={refetchData} />
-                                    </div>
-                                ) : (
-                                    // revoke token
-                                    <div>
-                                        <RevokeTokenDialog clientId={clientId[0]} token={clientData.data.external_token} afterGenerate={refetchData} />
-                                    </div>
-                                )
-                            }
+                    {
+                        clientData.data.parent_id === null ? (
 
-                        </div>
-                    </div>
+                            <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Client Information</h2>
+                                <div className="flex flex-col space-y-2">
+                                    <div>
+                                        <span className="text-gray-800 dark:text-gray-200">{clientData.data.client_name}</span>
+                                    </div>
+                                    {
+                                        // button to generate token if token is null or empty
+                                        (clientData.data.external_token == null || clientData.data.external_token == '') ? (
+                                            <div>
+                                                <GenerateTokenDialog clientId={clientId[0]} afterGenerate={refetchData} />
+                                            </div>
+                                        ) : (
+                                            // revoke token
+                                            <div>
+                                                <RevokeTokenDialog clientId={clientId[0]} token={clientData.data.external_token} afterGenerate={refetchData} />
+                                            </div>
+                                        )
+                                    }
+
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Client Information</h2>
+                                <div className="flex flex-col space-y-2">
+                                    <div>
+                                        <span className="text-gray-800 dark:text-gray-200">{clientData.data.client_name}</span>
+                                    </div>
+                                    <div>
+                                        <span className="text-gray-800 dark:text-gray-200">Parent: {clientData.data.parent.client_name}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
                     <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">User Information</h2>
                         <div className="flex flex-col space-y-2">
@@ -115,21 +160,48 @@ export default function DetailClientPage() {
                     </div>
                 </div>
 
-                <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Face Count</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <span className="text-gray-800 dark:text-gray-200">Total Faces: {clientData.data._count.faces}</span>
-                        </div>
-                        <div className="flex justify-end">
-                            <Link href={`/dashboard/faces?client_id=${clientId}`}>
-                                <button className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
-                                    View Faces
-                                </button>
-                            </Link>
-                        </div>
+                <div className={
+                    clsx(
+                        clientData.data.parent_id === null ? "grid grid-cols-1 md:grid-cols-2 gap-4" : "flex flex-col space-y-2"
+                    )
+                }>
 
+                    <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Face Registered Total</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <span className="text-gray-800 dark:text-gray-200">Total Faces: {clientData.data._count.faces}</span>
+                            </div>
+                            <div className="flex justify-end">
+                                <Link href={`/dashboard/faces?client_id=${clientId}`}>
+                                    <button className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
+                                        View Faces
+                                    </button>
+                                </Link>
+                            </div>
+
+                        </div>
                     </div>
+                    {
+                        clientData.data.parent_id === null ? (
+                            <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Subclient Total</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <span className="text-gray-800 dark:text-gray-200">Total Subclients: {clientData.data._count.children}</span>
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <Link href={`/dashboard/clients?parentId=${clientId}`}>
+                                            <button className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
+                                                View Subclients
+                                            </button>
+                                        </Link>
+                                    </div>
+
+                                </div>
+                            </div>
+                        ) : null
+                    }
                 </div>
 
                 <div className="flex flex-col space-y-2 border border-gray-200 dark:border-gray-700 rounded-lg p-4">

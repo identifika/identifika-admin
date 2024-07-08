@@ -14,7 +14,6 @@ type AddFaceDialogProps = {
 }
 
 export default function AddFaceDialog(props: AddFaceDialogProps) {
-
     return (
         <Dialog onOpenChange={(open) => {
             if (!open) {
