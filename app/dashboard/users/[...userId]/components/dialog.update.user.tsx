@@ -84,7 +84,7 @@ export default function DialogUpdateUser(props: Props) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Active
+                        Update User
                     </DialogTitle>
                 </DialogHeader>
                 {

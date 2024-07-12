@@ -124,7 +124,8 @@ export default function GenerateTokenDialog(props: GenerateTokenDialogProps) {
                                 case Status.SUCCESS:
                                     return (
                                         <div className="flex flex-col gap-4 mt-4 max-w-md">
-                                            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md">Your token has been generated successfully. You can copy it below <br />{token}</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md">Your token has been generated successfully. You can copy it below <br /></p>
+                                            <textarea  className="w-full px-3 py-2 text-sm text-gray-700 placeholder-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:border-gray-700 dark:focus:border-blue-500 dark:focus:ring-blue-500" rows={10} value={token ?? ''} readOnly></textarea>
 
                                             <div onClick={onCopy}
                                                 className="flex items-center justify-center w-1/2 px-2 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-green-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-green-600 dark:hover:bg-green-500 dark:bg-green-600 mt-4">

@@ -86,7 +86,7 @@ export default function DialogActive(props: Props) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Active
+                        Change Status
                     </DialogTitle>
                 </DialogHeader>
                 {

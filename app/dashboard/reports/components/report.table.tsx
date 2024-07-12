@@ -155,24 +155,17 @@ export default function ReportTable(props: ReportTableProps) {
                                                                     Headers
                                                                 </div>
                                                                 <div className="text-sm font-normal text-gray-800 dark:text-white lg:max-w-screen-lg overflow-x-auto">
-                                                                    <pre>
-                                                                        {
-                                                                            JSON.stringify(report.headers, null, 2)
-                                                                        }
-                                                                    </pre>
+                                                                    <textarea className="w-full px-3 py-2 text-sm text-gray-700 placeholder-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:border-gray-700 dark:focus:border-blue-500 dark:focus:ring-blue-500" rows={10} value={JSON.stringify(report.headers, null, 2)} readOnly></textarea>
+                                                                   
+
                                                                 </div>
                                                                 {/* response */}
                                                                 <div className="text-sm font-medium text-gray-800 dark:text-white mt-4">
                                                                     Response
                                                                 </div>
                                                                 <div className="text-sm font-normal text-gray-800 dark:text-white lg:max-w-screen-lg overflow-x-auto">
-                                                                    <pre>
-                                                                        {
-                                                                            report.response && typeof report.response === "string" && report.response.startsWith("{") && report.response.endsWith("}")
-                                                                                ? JSON.parse(JSON.stringify(report.response, null, 2))
-                                                                                : report.response
-                                                                        }
-                                                                    </pre>
+                                                                    <textarea className="w-full px-3 py-2 text-sm text-gray-700 placeholder-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:border-gray-700 dark:focus:border-blue-500 dark:focus:ring-blue-500" rows={10} value={JSON.parse(JSON.stringify(report.response, null, 2))} readOnly></textarea>
+                                                                  
                                                                 </div>
                                                             </div>
 

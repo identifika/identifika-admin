@@ -81,7 +81,7 @@ export default function DialogChangeRole(props: Props) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Active
+                        Change Role
                     </DialogTitle>
                 </DialogHeader>
                 {
