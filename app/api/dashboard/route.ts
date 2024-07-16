@@ -7,7 +7,6 @@ async function getUserCount() {
     return await prisma.users.count({
         where: {
             role: 'user',
-            active: true
         }
     })
 }

@@ -182,7 +182,7 @@ export default function FaceTable(props: FaceTableProps) {
                                         page: props.page - 1,
                                         limit: props.limit,
                                         ...props.search && { search: props.search },
-                                        ...props.clientId && { clientId: props.clientId },
+                                        ...props.clientId && { client_id: props.clientId },
                                     },
                                 }
                         }
@@ -209,7 +209,7 @@ export default function FaceTable(props: FaceTableProps) {
                                         page: props.page + 1,
                                         limit: props.limit,
                                         ...props.search && { search: props.search },
-                                        ...props.clientId && { clientId: props.clientId },
+                                        ...props.clientId && { client_id: props.clientId },
                                     },
                                 
                                 }
