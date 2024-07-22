@@ -23,7 +23,7 @@ export default function AddClientDialog({ afterSubmit: afterSubmit = () => { }, 
             <DialogContent>
                 <DialogHeader >
                     <DialogTitle>
-                        Add Face
+                        Add Client
                     </DialogTitle>
                 </DialogHeader>
                 <div>
@@ -32,7 +32,7 @@ export default function AddClientDialog({ afterSubmit: afterSubmit = () => { }, 
                             <>
 
                                 <DialogDescription>
-                                    You can add a face by importing a file
+                                    You can add a client by fill below form
                                 </DialogDescription>
                                 <AddClientForm />
                             </>
