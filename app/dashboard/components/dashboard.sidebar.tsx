@@ -1,7 +1,7 @@
 'use client';
 import Link from "next/link";
 import NavLinks from "./dashboard.navlinks";
-import { Building2Icon, CheckIcon, PowerIcon, Settings2Icon, User } from "lucide-react";
+import { BookOpenIcon, Building2Icon, CheckIcon, PowerIcon, Settings2Icon, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { RxDashboard } from "react-icons/rx";
 import { PiUsers } from "react-icons/pi";
@@ -167,6 +167,15 @@ export default function DashboardSidebar() {
                         )
                     }
 
+                    {/* divider */}
+                    <hr className="my-6 dark:border-gray-700" />
+                    <a
+                        className="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+                        href='https://documenter.getpostman.com/view/4905640/2sA3kUJ3SB' target="_blank" 
+                    >
+                        <BookOpenIcon className="w-5 h-5" />
+                        <span className="mx-4 font-medium">Documentation</span>
+                    </a>
                 </nav>
             </div>
             <div className="flex items-center justify-center text-gray-500 dark:text-gray-400">

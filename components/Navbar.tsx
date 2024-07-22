@@ -32,32 +32,43 @@ const Navbar = () => {
         <NavigationMenu>
           <NavigationMenuList className='gap-2'>
             <NavigationMenuItem>
-              <Link href='/dashboard' legacyBehavior passHref>
-                <NavigationMenuLink
-                  className={cn(navigationMenuTriggerStyle(), 'font-medium')}
-                >
-                  Dashboard
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            
 
-            <NavigationMenuItem>
-              {/* if pathname == signin  */}
-              {pathname === '/signin' ? (
-                null
-              ) : (
-                <AuthButton />
-              )}
-            </NavigationMenuItem>
+              {/* <NavigationMenuLink
+                className={cn(navigationMenuTriggerStyle(), 'font-medium')}
+              > */}
+                <a href='https://documenter.getpostman.com/view/4905640/2sA3kUJ3SB' target="_blank" className={cn(navigationMenuTriggerStyle(), 'font-medium')}>
+                API Documentation
+                </a>
+              
+            {/* </NavigationMenuLink> */}
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href='/dashboard' legacyBehavior passHref>
+              <NavigationMenuLink
+                className={cn(navigationMenuTriggerStyle(), 'font-medium')}
+              >
+                Dashboard
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          {/* https://documenter.getpostman.com/view/4905640/2sA3kUJ3SB */}
 
-            <NavigationMenuItem>
-              <ThemeToggle />
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
-    </header>
+          <NavigationMenuItem>
+            {/* if pathname == signin  */}
+            {pathname === '/signin' ? (
+              null
+            ) : (
+              <AuthButton />
+            )}
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <ThemeToggle />
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </div>
+    </header >
   )
 }
 export default Navbar
