@@ -1,40 +1,36 @@
+import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
+type MyToken = {
+  user?: {
+    role?: string
+  }
+}
+
 export async function middleware(request: NextRequest) {
-    const currentUser = request.cookies.get("next-auth.session-token")
+  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET }) as MyToken
 
-    if (!currentUser) {
-        if (request.nextUrl.pathname.startsWith('/dashboard')) {
-            return Response.redirect(new URL('/signin', request.url))
-        }
+  const isAuth = !!token
+  const { pathname } = request.nextUrl
+
+  if (!isAuth && pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/signin', request.url))
+  }
+
+  if (isAuth && (pathname.startsWith('/signin') || pathname.startsWith('/signup'))) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  if (isAuth && token.user?.role === 'user') {
+    if (pathname.startsWith('/dashboard/users') || pathname.startsWith('/dashboard/reports')) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
     }
+  }
 
-    if (currentUser && request.nextUrl.pathname.startsWith('/signin')) {
-        return Response.redirect(new URL('/dashboard', request.url))
-    }
-
-    if (currentUser && request.nextUrl.pathname.startsWith('/signup')) {
-        return Response.redirect(new URL('/dashboard', request.url))
-    }
-
-    if(currentUser){
-        var token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
-        if (!token) {
-            return Response.redirect(new URL('/signin', request.url))
-        }
-    
-        var role = (token as { user: { role: string } })?.user?.role;
-
-        if (role === 'user') {
-            if(request.nextUrl.pathname.startsWith('/dashboard/users') ||request.nextUrl.pathname.startsWith('/dashboard/reports') ){
-                return Response.redirect(new URL('/dashboard', request.url))
-            }
-        }
-    }
-    
+  return NextResponse.next()
 }
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }

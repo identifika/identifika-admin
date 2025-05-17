@@ -6,7 +6,7 @@
     "dev": "npx prisma generate dev --name init && next dev",
     "build": "npx prisma generate init && next build",
     "migrate:dev": "npx prisma generate dev --name init",
-    "start": "next start"
+    "start": "next start -H 0.0.0.0 -p 3000"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
