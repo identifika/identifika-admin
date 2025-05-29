@@ -4,7 +4,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
 }
 
 model users {
@@ -75,6 +76,8 @@ model recognition_types {
   face_model       String
   recognition_type String
   clients          clients[]
+
+  @@map("recognition_types") 
 }
 
 model queue_task {

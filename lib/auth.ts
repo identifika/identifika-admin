@@ -1,90 +1,87 @@
 import { NextAuthOptions } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import CredentialsProvider from "next-auth/providers/credentials";
-import { z } from 'zod';
-import { prisma } from '@/server';
-import bcrypt from 'bcryptjs';
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { z } from 'zod'
+
+type AppUser = {
+  name?: string | null
+  email?: string | null
+  image?: string | null
+  role?: string
+}
 
 async function loginWithExternalApi(email: string, password: string) {
   try {
-    var data = new FormData();
-    data.append('email', email);
-    data.append('password', password);
+    const data = new FormData()
+    data.append('email', email)
+    data.append('password', password)
 
     const baseIdentifikaUrl = process.env.IDENTIFIKA_API_URL
 
-    var user = await fetch(
-      `${baseIdentifikaUrl}/login`,
-      {
-        method: 'POST',
-        body: data,
-        mode: 'cors'
-      });
+    const res = await fetch(`${baseIdentifikaUrl}/login`, {
+      method: 'POST',
+      body: data,
+      mode: 'cors',
+    })
 
+    if (res.status !== 200) return null
 
-    if (user.status !== 200) {
-      return null;
-    }
-
-    return user.json();
-
-  } catch (error) {
-    console.error(error);
-    return null;
+    return res.json()
+  } catch (err) {
+    console.error(err)
+    return null
   }
 }
 
 export const authOptions: NextAuthOptions = {
-  // Secret for Next-auth, without this JWT encryption/decryption won't work
   secret: process.env.NEXTAUTH_SECRET,
-
-  // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" }
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials, req) {
-        try {
+      async authorize(credentials) {
+        const parsed = z
+          .object({ email: z.string().email(), password: z.string().min(6) })
+          .safeParse(credentials)
 
-          const parsedCredentials = z
-            .object({ email: z.string().email(), password: z.string().min(6) })
-            .safeParse(credentials);
+        if (!parsed.success) return null
 
-          if (!parsedCredentials.success) {
-            return null;
-          }
+        const user = await loginWithExternalApi(
+          parsed.data.email,
+          parsed.data.password
+        )
 
-          const user = await loginWithExternalApi(parsedCredentials.data.email, parsedCredentials.data.password);
-
-          if (!user) {
-            return null;
-          }
-
-          return user.result;
-        } catch (error) {
-          console.error(error);
-          return null;
-        }
+        return user?.result ?? null
       },
-    },)
+    }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
-        token.user = user as { name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; } | undefined;
+        token.user = user as AppUser
       }
-      return token;
+      return token
     },
     async session({ session, token }) {
-      session.user = token.user as { name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; } | undefined;
-      return session;
+      session.user = token.user as AppUser
+      return session
     },
   },
   pages: {
     signIn: '/signin',
     newUser: '/signup',
+  },
+  cookies: {
+    sessionToken: {
+      name: '__Secure-next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'none',
+        path: '/',
+        secure: true,
+      },
+    },
   },
 }
