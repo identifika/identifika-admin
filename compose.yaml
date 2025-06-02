@@ -8,3 +8,8 @@ services:
       NODE_ENV: production
     env_file:
       - .env
+      
+networks:
+  identifikanet:
+    name: identifikanet
+    external: true
