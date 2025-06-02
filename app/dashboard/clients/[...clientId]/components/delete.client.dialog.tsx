@@ -1,7 +1,6 @@
 'use client';
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { API_URL } from "@/constants/url_constant";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
@@ -24,19 +23,27 @@ export default function DeleteClientDialog(props: DeleteClientDialogProps) {
     const onDelete = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setStatus(Status.LOADING);
-        const res = await fetch(`${API_URL}/api/clients/${props.clientId}`,
-            {
+
+        try {
+            const res = await fetch(`/api/clients/${props.clientId}`, {
                 method: 'DELETE',
             });
-        if (!res.ok) {
-            setError('Failed to delete client');
-            setStatus(Status.ERROR);
-            return;
-        } else {
+
+            if (!res.ok) {
+                const error = await res.text();
+                setError(error || 'Failed to delete client');
+                setStatus(Status.ERROR);
+                return;
+            }
+
             setStatus(Status.SUCCESS);
             router.back();
+        } catch (err) {
+            setError('An unexpected error occurred');
+            setStatus(Status.ERROR);
         }
-    }
+    };
+
 
     return (
         <Dialog>

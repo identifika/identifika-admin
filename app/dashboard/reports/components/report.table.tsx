@@ -1,7 +1,7 @@
 'use client';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { API_URL } from "@/constants/url_constant";
+
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight, MoreVertical, MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +15,7 @@ async function fetchReport(
 ) {
     try {
         const res = await fetch(
-            `${API_URL}/api/report?page=${page}&limit=${limit}&search=${search}`,
+            `/api/report?page=${page}&limit=${limit}&search=${search}`,
         )
 
         if (!res.ok) {

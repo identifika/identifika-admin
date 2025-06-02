@@ -1,6 +1,6 @@
 'use client';
 
-import { API_URL } from "@/constants/url_constant";
+
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight, MoreVertical, MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +13,7 @@ async function fetchLogs(
 ) {
     try {
         const res = await fetch(
-            `${API_URL}/api/queue_task?page=${page}&limit=${limit}`,
+            `/api/queue_task?page=${page}&limit=${limit}`,
         )
 
         if (!res.ok) {
@@ -44,7 +44,7 @@ async function fetchLogs(
 
 async function fetchBulkRegisterStatus(taskId: string) {
     try {
-        const res = await fetch(`${API_URL}/api/queue_task/${taskId}/status_bulk`)
+        const res = await fetch(`/api/queue_task/${taskId}/status_bulk`)
         const data = await res.json()
         return data
     }

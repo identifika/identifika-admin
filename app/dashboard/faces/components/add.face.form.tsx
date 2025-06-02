@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/hover-card"
 import { FaQuestionCircle } from "react-icons/fa"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { API_URL } from "@/constants/url_constant"
+
 
 enum Status {
     IDLE,
@@ -29,7 +29,7 @@ type AddFaceFormProps = {
 
 async function fetchClients() {
     const res = await fetch(
-        `${API_URL}/api/clients`,
+        `/api/clients`,
     )
     if (!res.ok) {
         return {
@@ -120,8 +120,8 @@ export default function AddFaceForm(props: AddFaceFormProps) {
 
     const fetchFaceData = async (formData: FormData) => {
         const url = props.faceId
-            ? `${API_URL}/api/faces/${props.faceId}`
-            : `${API_URL}/api/faces`;
+            ? `/api/faces/${props.faceId}`
+            : `/api/faces`;
         const method = props.faceId ? 'PUT' : 'POST';
 
         const res = await fetch(url, {

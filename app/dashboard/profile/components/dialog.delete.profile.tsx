@@ -1,6 +1,6 @@
 
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { API_URL } from "@/constants/url_constant";
+
 import { useState } from "react";
 import { TbTrash } from "react-icons/tb";
 
@@ -24,7 +24,7 @@ export default function DeleteProfileDialog(props: DeleteProfileDialogProps) {
     const onDelete = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setStatus(Status.LOADING);
-        const res = await fetch(`${API_URL}/api/profile`, {
+        const res = await fetch(`/api/profile`, {
             method: 'DELETE',
         });
         if (!res.ok) {

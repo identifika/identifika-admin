@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { IoAddCircle, IoClose } from "react-icons/io5";
 import AddClientForm from "./add.client.form";
 import { useState, useEffect } from "react";
-import { API_URL } from "@/constants/url_constant";
 
 export default function AddClientDialog({ afterSubmit: afterSubmit = () => { },  user: user}) {
 

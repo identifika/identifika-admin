@@ -7,13 +7,13 @@ import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import DialogUpdateProfile from "./components/dialog.update.profile";
 import DialogReconfirmEmail from "./components/dialog.reconfirm.email";
-import { API_URL } from "@/constants/url_constant";
+
 import DeleteProfileDialog from "./components/dialog.delete.profile";
 import { signOut } from "next-auth/react";
 
 async function getUsers() {
     try {
-        const res = await fetch(`${API_URL}/api/profile`)
+        const res = await fetch(`/api/profile`)
         if (res.status === 200) {
             const data = await res.json()
             return data

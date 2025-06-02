@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, MoreVertical, MoreVerticalIcon } from "lucide-re
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import UserSearchComponent from "./user.search.component";
-import { API_URL } from "@/constants/url_constant";
+
 
 async function fetchUsers(
     page: number,
@@ -20,7 +20,7 @@ async function fetchUsers(
     }
 
     const res = await fetch(
-        `${API_URL}/api/users?${urlSearchParams.toString()}`,
+        `/api/users?${urlSearchParams.toString()}`,
     )
 
     if (!res.ok) {

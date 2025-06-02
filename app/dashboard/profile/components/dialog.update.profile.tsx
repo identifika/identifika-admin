@@ -1,6 +1,6 @@
 'use client';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { API_URL } from "@/constants/url_constant";
+
 import clsx from "clsx";
 import { useState } from "react";
 import { TbEdit } from "react-icons/tb";
@@ -27,7 +27,7 @@ async function changeRole(role: string, userId: string, isActive: boolean, name:
         formData.append('active', isActive.toString());
         formData.append('name', name);
 
-        const res = await fetch(`${API_URL}/api/profile`, {
+        const res = await fetch(`/api/profile`, {
             method: 'PUT',
             body: formData,
         });

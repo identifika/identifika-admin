@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { API_URL } from '@/constants/url_constant'
 
 type ImportFaceProps = {
     clientId?: string
@@ -15,7 +14,7 @@ enum Status {
 
 async function fetchClients() {
     const res = await fetch(
-        `${API_URL}/api/clients`,
+        `/api/clients`,
     )
     if (!res.ok) {
         return {
@@ -67,7 +66,7 @@ export default function ImportFaceForm(props: ImportFaceProps) {
 
         try {
             setStatus(Status.LOADING)
-            const res = await fetch(`${API_URL}/api/faces/import`, {
+            const res = await fetch(`/api/faces/import`, {
                 method: 'POST',
                 body: data
             })

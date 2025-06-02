@@ -15,7 +15,6 @@ import { FaInfoCircle } from "react-icons/fa";
 import GenerateTokenDialog from "./generate.token.dialog";
 import { useEffect, useState } from "react";
 import ClientSearchComponent from "./client.search.component";
-import { API_URL } from "@/constants/url_constant";
 
 async function fetchClients(
     page?: number,
@@ -31,7 +30,7 @@ async function fetchClients(
     if (userId) urlSearchParams.append("userId", userId);
     if (parentId) urlSearchParams.append("parentId", parentId);
 
-    const res = await fetch(`${API_URL}/api/clients?` + urlSearchParams.toString());
+    const res = await fetch(`/api/clients?` + urlSearchParams.toString());
 
     if (!res.ok) {
         return {
@@ -50,7 +49,7 @@ async function fetchClients(
 
 async function getUsers() {
     try {
-        const res = await fetch(`${API_URL}/api/profile`)
+        const res = await fetch(`/api/profile`)
         if (res.status === 200) {
             const data = await res.json()
             return data
